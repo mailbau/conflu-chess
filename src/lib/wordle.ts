@@ -1,5 +1,5 @@
 import { answers, all } from "./wordleWords";
-import type { LetterStatus } from "./wordleStorage";
+export { scoreGuess } from "./wordScoring";
 
 const VALID_GUESSES = new Set(all.map((w) => w.toLowerCase()));
 
@@ -24,29 +24,4 @@ export function dailyWord(dateKey: string): string {
   const days = Math.floor((new Date(`${dateKey}T00:00:00Z`).getTime() - EPOCH) / DAY_MS);
   const index = ((days % answers.length) + answers.length) % answers.length;
   return answers[index];
-}
-
-// standard Wordle coloring: exact matches first, then letters present
-// elsewhere, accounting for duplicate letters correctly
-export function scoreGuess(guess: string, word: string): LetterStatus[] {
-  const g = guess.toLowerCase().split("");
-  const w = word.toLowerCase().split("");
-  const result: LetterStatus[] = new Array(5).fill("absent");
-  const remaining: Record<string, number> = {};
-
-  for (let i = 0; i < 5; i++) {
-    if (g[i] === w[i]) {
-      result[i] = "correct";
-    } else {
-      remaining[w[i]] = (remaining[w[i]] ?? 0) + 1;
-    }
-  }
-  for (let i = 0; i < 5; i++) {
-    if (result[i] === "correct") continue;
-    if (remaining[g[i]] > 0) {
-      result[i] = "present";
-      remaining[g[i]]--;
-    }
-  }
-  return result;
 }

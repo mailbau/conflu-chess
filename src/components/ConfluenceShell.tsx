@@ -9,12 +9,16 @@ import styles from "./ConfluenceShell.module.css";
 export const CHESS_TITLE = "BRD 2026 051 OPS COG Enhancement Matrix Validasi Transaksi Tunai";
 export const SUDOKU_TITLE = "BRD 2026 052 OPS COG Integrasi Modul Rekonsiliasi Harian";
 export const WORDLE_TITLE = "BRD 2026 050 OPS COG Verifikasi Kode Referensi Harian";
+export const POLYGONLE_TITLE = "BRD 2026 044 OPS COG Validasi Pola Simbol Transaksi";
+export const WORD500_TITLE = "BRD 2026 045 OPS COG Audit Tersembunyi Kode Transaksi";
 
 const REAL_LINKS = [
   { href: "/", label: "2026 - Central Operation Group (COG)" },
   { href: "/chess", label: CHESS_TITLE },
   { href: "/sudoku", label: SUDOKU_TITLE },
   { href: "/wordle", label: WORDLE_TITLE },
+  { href: "/polygonle", label: POLYGONLE_TITLE },
+  { href: "/word500", label: WORD500_TITLE },
 ];
 
 const DECORATIVE_TITLES = [

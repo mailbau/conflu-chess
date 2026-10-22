@@ -1,4 +1,4 @@
-export type LetterStatus = "correct" | "present" | "absent";
+export type { LetterStatus } from "./wordScoring";
 export type WordleSave = {
   mode: "daily" | "free";
   dateKey: string; // daily: today's date; free: id of the current game
