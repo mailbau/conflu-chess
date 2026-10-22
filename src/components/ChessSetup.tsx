@@ -14,6 +14,7 @@ export default function ChessSetup() {
   const [color, setColor] = useState<Color>("random");
   const [link, setLink] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   async function createChallenge() {
     setCreating(true);
@@ -30,6 +31,17 @@ export default function ChessSetup() {
       const url = `${window.location.origin}/chess/${data.id}`;
       setLink(url);
       router.push(`/chess/${data.id}`);
+    }
+  }
+
+  async function copyLink() {
+    if (!link) return;
+    try {
+      await navigator.clipboard.writeText(link);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      // clipboard blocked: the input below is still there to select manually
     }
   }
 
@@ -73,6 +85,9 @@ export default function ChessSetup() {
         <div className={styles.linkBox}>
           Send this link to your friend:
           <input readOnly value={link} onFocus={(e) => e.currentTarget.select()} />
+          <button className={styles.copyButton} onClick={copyLink}>
+            {copied ? "Copied!" : "Copy link"}
+          </button>
         </div>
       )}
     </div>

@@ -133,3 +133,36 @@
   color: var(--text-dim);
   background: var(--bg-card);
 }
+
+@media (max-width: 768px) {
+  .search {
+    display: none;
+  }
+
+  .topnav {
+    display: none;
+  }
+
+  .sidebar {
+    width: 72px;
+    padding: 12px 4px;
+  }
+
+  .sidebarTitle {
+    display: none;
+  }
+
+  .sidebarLink {
+    text-align: center;
+    font-size: 12px;
+  }
+
+  .main {
+    padding: 16px;
+    max-width: 100%;
+  }
+
+  .title {
+    font-size: 22px;
+  }
+}

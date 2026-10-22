@@ -7,6 +7,7 @@ import type { PieceDropHandlerArgs } from "react-chessboard";
 import { supabase } from "@/lib/supabase";
 import { getPlayerId } from "@/lib/playerId";
 import type { GameRow } from "@/lib/gameTypes";
+import { playMoveSound, playCaptureSound, playGameOverSound } from "@/lib/sound";
 import styles from "./ChessGame.module.css";
 
 function formatClock(ms: number) {
@@ -28,6 +29,8 @@ export default function ChessGame({ gameId }: { gameId: string }) {
   const [tick, setTick] = useState(0); // forces re-render for the live clock
   const playerId = useRef<string>("");
   const timeoutClaimed = useRef(false);
+  const prevPgn = useRef<string | null>(null);
+  const prevStatus = useRef<string | null>(null);
 
   useEffect(() => {
     playerId.current = getPlayerId();
@@ -44,7 +47,12 @@ export default function ChessGame({ gameId }: { gameId: string }) {
         body: JSON.stringify({ playerId: pid }),
       });
       const { data } = await supabase.from("games").select("*").eq("id", gameId).single();
-      if (!cancelled && data) setGame(data as GameRow);
+      if (!cancelled && data) {
+        const row = data as GameRow;
+        prevPgn.current = row.pgn;
+        prevStatus.current = row.status;
+        setGame(row);
+      }
     })();
     return () => {
       cancelled = true;
@@ -59,7 +67,18 @@ export default function ChessGame({ gameId }: { gameId: string }) {
         "postgres_changes",
         { event: "UPDATE", schema: "public", table: "games", filter: `id=eq.${gameId}` },
         (payload) => {
-          setGame(payload.new as GameRow);
+          const row = payload.new as GameRow;
+          if (prevPgn.current !== null && row.pgn !== prevPgn.current) {
+            const newText = row.pgn.slice(prevPgn.current.length);
+            if (newText.includes("x")) playCaptureSound();
+            else playMoveSound();
+          }
+          if (prevStatus.current !== null && row.status === "finished" && prevStatus.current !== "finished") {
+            playGameOverSound();
+          }
+          prevPgn.current = row.pgn;
+          prevStatus.current = row.status;
+          setGame(row);
           setOptimisticFen(null);
           timeoutClaimed.current = false;
         }
@@ -158,6 +177,17 @@ export default function ChessGame({ gameId }: { gameId: string }) {
     });
   }
 
+  const [copied, setCopied] = useState(false);
+  async function copyLink() {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      // clipboard blocked (no permission, insecure context): fall back to manual select
+    }
+  }
+
   if (!game) return <p>Loading…</p>;
 
   const waiting = game.status === "waiting";
@@ -203,6 +233,9 @@ export default function ChessGame({ gameId }: { gameId: string }) {
           <div className={styles.linkBox}>
             Waiting for opponent. Share this link:
             <input readOnly value={link} onFocus={(e) => e.currentTarget.select()} />
+            <button className={styles.copyButton} onClick={copyLink}>
+              {copied ? "Copied!" : "Copy link"}
+            </button>
           </div>
         )}
 

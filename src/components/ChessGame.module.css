@@ -110,3 +110,33 @@
   justify-content: space-between;
   gap: 8px;
 }
+
+.copyButton {
+  padding: 6px 10px;
+  margin-top: 6px;
+  background: var(--blue);
+  border: none;
+  border-radius: 4px;
+  color: #0b1520;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.copyButton:hover {
+  opacity: 0.9;
+}
+
+@media (max-width: 600px) {
+  .wrap {
+    flex-direction: column;
+  }
+
+  .boardCol {
+    width: 100%;
+  }
+
+  .sidebar {
+    width: 100%;
+  }
+}
