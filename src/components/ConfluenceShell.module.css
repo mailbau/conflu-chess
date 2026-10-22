@@ -1,0 +1,135 @@
+.shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  height: 48px;
+  padding: 0 16px;
+  background: var(--bg-sidebar);
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+}
+
+.logo {
+  font-weight: 700;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.logoMark {
+  color: var(--blue);
+}
+
+.topnav {
+  display: flex;
+  gap: 16px;
+  color: var(--text-dim);
+}
+
+.topnav a {
+  color: var(--text-dim);
+}
+
+.search {
+  margin-left: auto;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 6px 10px;
+  color: var(--text-dim);
+  font-size: 13px;
+  width: 220px;
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  padding: 16px 8px;
+  font-size: 14px;
+  overflow-y: auto;
+}
+
+.sidebarTitle {
+  font-weight: 600;
+  padding: 4px 8px 12px;
+  color: var(--text);
+}
+
+.sidebarLink {
+  display: block;
+  padding: 6px 8px;
+  border-radius: 4px;
+  color: var(--text-dim);
+}
+
+.sidebarLink:hover {
+  background: var(--bg-card);
+  text-decoration: none;
+}
+
+.sidebarLinkActive {
+  background: var(--blue-bg);
+  color: var(--blue);
+}
+
+.main {
+  flex: 1;
+  padding: 24px 40px;
+  max-width: 900px;
+}
+
+.breadcrumbs {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 6px;
+}
+
+.meta {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.propsTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 24px;
+  font-size: 14px;
+}
+
+.propsTable td {
+  border: 1px solid var(--border);
+  padding: 8px 12px;
+  vertical-align: top;
+}
+
+.propsTable td:first-child {
+  width: 160px;
+  color: var(--text-dim);
+  background: var(--bg-card);
+}
