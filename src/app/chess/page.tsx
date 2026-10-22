@@ -1,4 +1,5 @@
 import ConfluenceShell from "@/components/ConfluenceShell";
+import ChessSetup from "@/components/ChessSetup";
 
 export default function ChessPage() {
   return (
@@ -7,7 +8,7 @@ export default function ChessPage() {
       title="Chess"
       meta="Created by Ismail, last updated just now · 1 min read"
     >
-      <p>Challenge setup (time control, create link) goes here. Coming in phase 4.</p>
+      <ChessSetup />
     </ConfluenceShell>
   );
 }

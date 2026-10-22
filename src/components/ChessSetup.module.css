@@ -1,0 +1,68 @@
+.picker {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.picker button {
+  padding: 10px 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.picker button:hover {
+  background: var(--blue-bg);
+}
+
+.active {
+  background: var(--blue-bg) !important;
+  color: var(--blue) !important;
+  border-color: var(--blue) !important;
+}
+
+.section {
+  margin-bottom: 20px;
+}
+
+.label {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+
+.createButton {
+  padding: 10px 20px;
+  background: var(--blue);
+  border: none;
+  border-radius: 4px;
+  color: #0b1520;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.createButton:hover {
+  opacity: 0.9;
+}
+
+.linkBox {
+  margin-top: 20px;
+  padding: 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+.linkBox input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text);
+  font-size: 13px;
+}

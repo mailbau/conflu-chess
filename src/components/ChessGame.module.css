@@ -1,0 +1,112 @@
+.wrap {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.boardCol {
+  width: 480px;
+  max-width: 100%;
+}
+
+.clock {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.clockActive {
+  border-color: var(--blue);
+}
+
+.clockTime {
+  font-size: 22px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.clockLow {
+  color: #f87171;
+}
+
+.sidebar {
+  min-width: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.status {
+  padding: 10px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.actions button {
+  padding: 8px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.actions button:hover {
+  background: var(--blue-bg);
+}
+
+.linkBox {
+  padding: 10px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.linkBox input {
+  width: 100%;
+  padding: 6px;
+  margin-top: 6px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text);
+  font-size: 12px;
+}
+
+.gameOverBanner {
+  padding: 12px;
+  background: #14301f;
+  border: 1px solid #2a6b42;
+  color: #7ee2a0;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.drawOffer {
+  padding: 10px 14px;
+  background: var(--blue-bg);
+  border: 1px solid var(--blue);
+  border-radius: 4px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
