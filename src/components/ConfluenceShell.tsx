@@ -8,11 +8,13 @@ import styles from "./ConfluenceShell.module.css";
 // like a normal long BRD list, same pattern as the real Confluence export.
 export const CHESS_TITLE = "BRD 2026 051 OPS COG Enhancement Matrix Validasi Transaksi Tunai";
 export const SUDOKU_TITLE = "BRD 2026 052 OPS COG Integrasi Modul Rekonsiliasi Harian";
+export const WORDLE_TITLE = "BRD 2026 050 OPS COG Verifikasi Kode Referensi Harian";
 
 const REAL_LINKS = [
   { href: "/", label: "2026 - Central Operation Group (COG)" },
   { href: "/chess", label: CHESS_TITLE },
   { href: "/sudoku", label: SUDOKU_TITLE },
+  { href: "/wordle", label: WORDLE_TITLE },
 ];
 
 const DECORATIVE_TITLES = [

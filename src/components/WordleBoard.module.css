@@ -1,0 +1,179 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  max-width: 420px;
+}
+
+.modeTabs {
+  display: flex;
+  gap: 8px;
+  align-self: flex-start;
+}
+
+.modeTabs button {
+  padding: 8px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.modeTabActive {
+  background: var(--blue-bg) !important;
+  color: var(--blue) !important;
+  border-color: var(--blue) !important;
+}
+
+.grid {
+  display: grid;
+  grid-template-rows: repeat(6, 1fr);
+  gap: 6px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(5, 48px);
+  gap: 6px;
+}
+
+.tile {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 700;
+  text-transform: uppercase;
+  border: 2px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text);
+}
+
+.tileFilled {
+  border-color: #566573;
+}
+
+.tileCorrect {
+  background: #2a6b42;
+  border-color: #2a6b42;
+  color: #fff;
+}
+
+.tilePresent {
+  background: #8a6d1f;
+  border-color: #8a6d1f;
+  color: #fff;
+}
+
+.tileAbsent {
+  background: #3a3f44;
+  border-color: #3a3f44;
+  color: var(--text-dim);
+}
+
+.shake {
+  animation: shake 0.4s;
+}
+
+@keyframes shake {
+  25% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(4px);
+  }
+}
+
+.keyboard {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.keyboardRow {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+}
+
+.key {
+  min-width: 32px;
+  height: 42px;
+  padding: 0 8px;
+  background: var(--bg-card);
+  border: none;
+  border-radius: 4px;
+  color: var(--text);
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+.key:hover {
+  filter: brightness(1.2);
+}
+
+.keyWide {
+  min-width: 52px;
+  font-size: 11px;
+}
+
+.keyCorrect {
+  background: #2a6b42;
+  color: #fff;
+}
+
+.keyPresent {
+  background: #8a6d1f;
+  color: #fff;
+}
+
+.keyAbsent {
+  background: #3a3f44;
+  color: var(--text-dim);
+}
+
+.status {
+  font-size: 14px;
+  color: var(--text-dim);
+  text-align: center;
+}
+
+.banner {
+  padding: 10px 16px;
+  border-radius: 4px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.bannerWon {
+  background: #14301f;
+  border: 1px solid #2a6b42;
+  color: #7ee2a0;
+}
+
+.bannerLost {
+  background: #3a1f1f;
+  border: 1px solid #6b2a2a;
+  color: #f87171;
+}
+
+.newGameButton {
+  padding: 8px 16px;
+  background: var(--blue);
+  border: none;
+  border-radius: 4px;
+  color: #0b1520;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.newGameButton:hover {
+  opacity: 0.9;
+}

@@ -1,4 +1,4 @@
-import ConfluenceShell, { CHESS_TITLE, SUDOKU_TITLE } from "@/components/ConfluenceShell";
+import ConfluenceShell, { CHESS_TITLE, SUDOKU_TITLE, WORDLE_TITLE } from "@/components/ConfluenceShell";
 import styles from "@/components/ConfluenceShell.module.css";
 
 export default function Home() {
@@ -32,6 +32,12 @@ export default function Home() {
             <td>2</td>
             <td>
               <a href="/sudoku">{SUDOKU_TITLE}</a>
+            </td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>
+              <a href="/wordle">{WORDLE_TITLE}</a>
             </td>
           </tr>
         </tbody>
