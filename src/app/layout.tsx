@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Game Night Space",
-  description: "Chess and Sudoku, Confluence-style.",
+  title: "2026 - Central Operation Group (COG) - Confluence",
+  description: "Business Requirement Document space.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

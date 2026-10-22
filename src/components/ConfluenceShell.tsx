@@ -4,10 +4,28 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import styles from "./ConfluenceShell.module.css";
 
-const SIDEBAR_LINKS = [
-  { href: "/", label: "Overview" },
-  { href: "/chess", label: "Chess" },
-  { href: "/sudoku", label: "Sudoku" },
+// Only these two go anywhere; the rest are inert filler so the sidebar reads
+// like a normal long BRD list, same pattern as the real Confluence export.
+export const CHESS_TITLE = "BRD 2026 051 OPS COG Enhancement Matrix Validasi Transaksi Tunai";
+export const SUDOKU_TITLE = "BRD 2026 052 OPS COG Integrasi Modul Rekonsiliasi Harian";
+
+const REAL_LINKS = [
+  { href: "/", label: "2026 - Central Operation Group (COG)" },
+  { href: "/chess", label: CHESS_TITLE },
+  { href: "/sudoku", label: SUDOKU_TITLE },
+];
+
+const DECORATIVE_TITLES = [
+  "BRD 2026 047 OPS COG Enhancement Dashboard Cardpro",
+  "BRD 2026 048 OPS COG Enhancement SOR Kliring Kredit Incoming",
+  "BRD 2026 049 OPS COG Enhancement Berita Acara Card Destruction",
+  "BRD 2026 053 OPS COG RPA Auto Proceed Guarantee",
+  "BRD 2026 054 OPS COG Payment Hub Outgoing Kliring Debet",
+  "BRD 2026 055 OPS COG Self Optimizing Reconciliation ATM Bersama",
+  "BRD 2026 056 OPS COG Migrasi Proses Pengisian Kas ATM/CRM",
+  "BRD 2026 058 OPS COG Penutupan Channel BRIFAST Transaksi RTGS",
+  "BRD 2026 059 OPS COG Update Stock Real Time Kartu di Uker",
+  "BRD 2026 060 OPS COG Pengembangan Cash Smart System",
 ];
 
 export default function ConfluenceShell({
@@ -27,20 +45,21 @@ export default function ConfluenceShell({
     <div className={styles.shell}>
       <header className={styles.topbar}>
         <div className={styles.logo}>
-          <span className={styles.logoMark}>◆</span> Camplue
+          <span className={styles.logoMark}>◆</span> Confluence
         </div>
         <nav className={styles.topnav}>
           <span>Spaces</span>
           <span>People</span>
-          <span>Create</span>
+          <span>Calendars</span>
+          <span>Analytics</span>
         </nav>
         <input className={styles.search} placeholder="Search" readOnly />
       </header>
 
       <div className={styles.body}>
         <aside className={styles.sidebar}>
-          <div className={styles.sidebarTitle}>Game Night Space</div>
-          {SIDEBAR_LINKS.map((link) => (
+          <div className={styles.sidebarTitle}>2026 - Central Operation Group</div>
+          {REAL_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
@@ -50,6 +69,11 @@ export default function ConfluenceShell({
             >
               {link.label}
             </Link>
+          ))}
+          {DECORATIVE_TITLES.map((t) => (
+            <span key={t} className={styles.sidebarLink} style={{ cursor: "default" }}>
+              {t}
+            </span>
           ))}
         </aside>
 

@@ -134,6 +134,19 @@
   background: var(--bg-card);
 }
 
+.main h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 28px 0 10px;
+}
+
+.main p {
+  line-height: 1.6;
+  color: var(--text);
+  margin: 0 0 12px;
+}
+
 @media (max-width: 768px) {
   .search {
     display: none;

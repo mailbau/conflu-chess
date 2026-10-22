@@ -213,6 +213,10 @@ export default function ChessGame({ gameId }: { gameId: string }) {
             onPieceDrop,
             boardOrientation: myColor === "b" ? "black" : "white",
             allowDragging: !!myColor && game.status === "active",
+            darkSquareStyle: { backgroundColor: "#22272b" },
+            lightSquareStyle: { backgroundColor: "#38414a" },
+            dropSquareStyle: { boxShadow: "inset 0 0 0 3px #579dff" },
+            boardStyle: { borderRadius: 4, border: "1px solid #38414a" },
           }}
         />
 
