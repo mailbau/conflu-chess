@@ -8,7 +8,10 @@ import { supabase } from "@/lib/supabase";
 import { getPlayerId } from "@/lib/playerId";
 import type { GameRow } from "@/lib/gameTypes";
 import { playMoveSound, playCaptureSound, playGameOverSound } from "@/lib/sound";
+import { premoveTargets, applyForcedMove } from "@/lib/chessPremove";
 import styles from "./ChessGame.module.css";
+
+type Premove = { from: string; to: string; promotion: string };
 
 function formatClock(ms: number) {
   const total = Math.max(0, Math.ceil(ms / 1000));
@@ -26,6 +29,7 @@ const RESULT_LABEL: Record<string, string> = {
 export default function ChessGame({ gameId }: { gameId: string }) {
   const [game, setGame] = useState<GameRow | null>(null);
   const [optimisticFen, setOptimisticFen] = useState<string | null>(null);
+  const [premove, setPremove] = useState<Premove | null>(null);
   const [tick, setTick] = useState(0); // forces re-render for the live clock
   const playerId = useRef<string>("");
   const timeoutClaimed = useRef(false);
@@ -131,10 +135,46 @@ export default function ChessGame({ gameId }: { gameId: string }) {
     }
   }, [game, myColor, turnColor, whiteMs, blackMs, gameId]);
 
+  const submitMove = useCallback(
+    (from: string, to: string, promotion: string) => {
+      fetch(`/api/games/${gameId}/move`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ playerId: playerId.current, from, to, promotion }),
+      }).then(async (res) => {
+        if (!res.ok) {
+          // server rejected it (stale state, out of time, an invalidated
+          // premove, etc): snap back to whatever the server has
+          const { data } = await supabase.from("games").select("*").eq("id", gameId).single();
+          if (data) setGame(data as GameRow);
+          setOptimisticFen(null);
+        }
+      });
+    },
+    [gameId]
+  );
+
+  // fire a queued premove the instant it becomes my turn
+  useEffect(() => {
+    if (!game || !premove || !myColor || game.status !== "active") return;
+    if (turnColor !== myColor) return;
+    setPremove(null);
+    setOptimisticFen(
+      applyForcedMove(game.fen, premove.from, premove.to, myColor, premove.promotion) ?? null
+    );
+    submitMove(premove.from, premove.to, premove.promotion);
+  }, [game, premove, myColor, turnColor, submitMove]);
+
   const onPieceDrop = useCallback(
     ({ sourceSquare, targetSquare }: PieceDropHandlerArgs) => {
       if (!game || !targetSquare || !myColor || game.status !== "active") return false;
-      if (turnColor !== myColor) return false;
+
+      if (turnColor !== myColor) {
+        // not my turn yet: queue it as a premove instead of playing it now
+        if (!premoveTargets(game.fen, sourceSquare, myColor).includes(targetSquare)) return false;
+        setPremove({ from: sourceSquare, to: targetSquare, promotion: "q" });
+        return true;
+      }
 
       const chess = new Chess();
       chess.load(game.fen);
@@ -147,27 +187,15 @@ export default function ChessGame({ gameId }: { gameId: string }) {
       if (!move) return false;
 
       setOptimisticFen(chess.fen());
-      fetch(`/api/games/${gameId}/move`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          playerId: playerId.current,
-          from: sourceSquare,
-          to: targetSquare,
-          promotion: "q",
-        }),
-      }).then(async (res) => {
-        if (!res.ok) {
-          // server rejected it (stale state, out of time, etc): snap back
-          const { data } = await supabase.from("games").select("*").eq("id", gameId).single();
-          if (data) setGame(data as GameRow);
-          setOptimisticFen(null);
-        }
-      });
+      submitMove(sourceSquare, targetSquare, "q");
       return true;
     },
-    [game, myColor, turnColor, gameId]
+    [game, myColor, turnColor, submitMove]
   );
+
+  function cancelPremove() {
+    setPremove(null);
+  }
 
   async function sendAction(action: string) {
     await fetch(`/api/games/${gameId}/action`, {
@@ -193,6 +221,16 @@ export default function ChessGame({ gameId }: { gameId: string }) {
   const waiting = game.status === "waiting";
   const link = typeof window !== "undefined" ? window.location.href : "";
 
+  const premovePreviewFen =
+    premove && myColor ? applyForcedMove(game.fen, premove.from, premove.to, myColor, premove.promotion) : null;
+  const displayFen = optimisticFen ?? premovePreviewFen ?? game.fen;
+  const premoveSquareStyles = premove
+    ? {
+        [premove.from]: { backgroundColor: "rgba(255, 170, 0, 0.35)" },
+        [premove.to]: { backgroundColor: "rgba(255, 170, 0, 0.35)" },
+      }
+    : undefined;
+
   return (
     <div className={styles.wrap}>
       <div className={styles.boardCol}>
@@ -209,10 +247,13 @@ export default function ChessGame({ gameId }: { gameId: string }) {
 
         <Chessboard
           options={{
-            position: optimisticFen ?? game.fen,
+            position: displayFen,
             onPieceDrop,
+            onSquareRightClick: cancelPremove,
             boardOrientation: myColor === "b" ? "black" : "white",
             allowDragging: !!myColor && game.status === "active",
+            squareStyles: premoveSquareStyles,
+            animationDurationInMs: 150,
             darkSquareStyle: { backgroundColor: "#22272b" },
             lightSquareStyle: { backgroundColor: "#38414a" },
             dropSquareStyle: { boxShadow: "inset 0 0 0 3px #579dff" },
@@ -233,6 +274,13 @@ export default function ChessGame({ gameId }: { gameId: string }) {
       </div>
 
       <div className={styles.sidebar}>
+        {premove && (
+          <div className={styles.drawOffer}>
+            Premove queued: {premove.from}–{premove.to}
+            <button onClick={cancelPremove}>Cancel</button>
+          </div>
+        )}
+
         {waiting && (
           <div className={styles.linkBox}>
             Waiting for opponent. Share this link:
