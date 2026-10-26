@@ -1,11 +1,13 @@
-import type { LetterStatus } from "./wordScoring";
+// player's own markers per guess tile, UI aid only (not game truth):
+// "absent"/"present"/"correct" track a guess; "wrong" flags a fixed mistake
+export type Mark = "absent" | "present" | "correct" | "wrong";
 
 export type Word500Save = {
   mode: "daily" | "free";
   dateKey: string; // daily: today's date; free: id of the current game
   word: string;
   guesses: string[];
-  annotations: LetterStatus[][]; // player's own color markers per guess, UI aid only
+  annotations: Mark[][];
   status: "playing" | "won" | "lost";
 };
 

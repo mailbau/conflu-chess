@@ -2,8 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { dailyWord, isValidGuess, pickRandomWord, todayDateKey } from "@/lib/word500";
-import { scoreGuess, type LetterStatus } from "@/lib/wordScoring";
-import { loadSave, writeSave, type Word500Save } from "@/lib/word500Storage";
+import { scoreGuess } from "@/lib/wordScoring";
+import { loadSave, writeSave, type Mark, type Word500Save } from "@/lib/word500Storage";
 import styles from "./Word500Board.module.css";
 
 const MAX_GUESSES = 8;
@@ -31,8 +31,8 @@ function newFree(): Word500Save {
   };
 }
 
-function cycle(s: LetterStatus): LetterStatus {
-  return s === "absent" ? "present" : s === "present" ? "correct" : "absent";
+function cycle(s: Mark): Mark {
+  return s === "absent" ? "present" : s === "present" ? "correct" : s === "correct" ? "wrong" : "absent";
 }
 
 export default function Word500Board() {
@@ -68,8 +68,20 @@ export default function Word500Board() {
       const correct = score.filter((s) => s === "correct").length;
       const present = score.filter((s) => s === "present").length;
       const absent = 5 - correct - present;
-      return { guess: g, marks: save.annotations[i] ?? Array(5).fill("absent"), correct, present, absent };
+      return {
+        guess: g,
+        marks: save.annotations[i] ?? (Array(5).fill("absent") as Mark[]),
+        correct,
+        present,
+        absent,
+      };
     });
+  }, [save]);
+
+  const usedLetters = useMemo(() => {
+    const used = new Set<string>();
+    save?.guesses.forEach((g) => g.split("").forEach((c) => used.add(c)));
+    return used;
   }, [save]);
 
   function submitGuess() {
@@ -84,7 +96,7 @@ export default function Word500Board() {
     }
     setError(null);
     const guesses = [...save.guesses, current.toLowerCase()];
-    const annotations = [...save.annotations, Array(5).fill("absent") as LetterStatus[]];
+    const annotations = [...save.annotations, Array(5).fill("absent") as Mark[]];
     const won = current.toLowerCase() === save.word.toLowerCase();
     const status = won ? "won" : guesses.length >= MAX_GUESSES ? "lost" : "playing";
     const next: Word500Save = { ...save, guesses, annotations, status };
@@ -113,14 +125,17 @@ export default function Word500Board() {
 
   if (!save) return <p>Loading…</p>;
 
-  const tileClass = (mark: LetterStatus) =>
+  const tileClass = (mark: Mark) =>
     [
       styles.tile,
       mark === "correct" ? styles.tileMarkedCorrect : "",
       mark === "present" ? styles.tileMarkedPresent : "",
+      mark === "wrong" ? styles.tileMarkedWrong : "",
     ]
       .filter(Boolean)
       .join(" ");
+
+  const alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
 
   return (
     <div className={styles.wrap}>
@@ -141,8 +156,9 @@ export default function Word500Board() {
 
       <div className={styles.hint}>
         5-letter word, {MAX_GUESSES - save.guesses.length} guesses left. Each guess shows
-        only how many letters are green/yellow/gray — not which ones. Click a tile to mark
-        your own guess.
+        only how many letters are green/yellow/gray — not which ones. Click a tile to cycle
+        your own mark (gray → yellow → green → red for "definitely wrong"). Letters below
+        show which ones you've already used.
       </div>
 
       {save.status === "won" && (
@@ -177,6 +193,17 @@ export default function Word500Board() {
               <span className={styles.countGray}>{row.absent}</span>
             </div>
           </div>
+        ))}
+      </div>
+
+      <div className={styles.keyboard}>
+        {alphabet.map((letter) => (
+          <span
+            key={letter}
+            className={usedLetters.has(letter) ? styles.keyUsed : styles.keyUnused}
+          >
+            {letter}
+          </span>
         ))}
       </div>
 

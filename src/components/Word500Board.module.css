@@ -79,6 +79,45 @@
   color: #fff;
 }
 
+.tileMarkedWrong {
+  background: #6b2a2a;
+  border-color: #6b2a2a;
+  color: #fff;
+}
+
+.keyboard {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: center;
+}
+
+.keyUsed,
+.keyUnused {
+  width: 22px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  border-radius: 3px;
+}
+
+.keyUnused {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+.keyUsed {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  opacity: 0.4;
+}
+
 .counts {
   display: flex;
   gap: 6px;
