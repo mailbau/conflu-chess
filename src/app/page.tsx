@@ -30,54 +30,63 @@ export default function Home() {
           <tr>
             <td>No.</td>
             <td>Dokumen</td>
+            <td>Keterangan</td>
           </tr>
           <tr>
             <td>1</td>
             <td>
               <a href="/chess">{CHESS_TITLE}</a>
             </td>
+            <td className={styles.gameNote}>Chess</td>
           </tr>
           <tr>
             <td>2</td>
             <td>
               <a href="/sudoku">{SUDOKU_TITLE}</a>
             </td>
+            <td className={styles.gameNote}>Sudoku</td>
           </tr>
           <tr>
             <td>3</td>
             <td>
               <a href="/wordle">{WORDLE_TITLE}</a>
             </td>
+            <td className={styles.gameNote}>Wordle</td>
           </tr>
           <tr>
             <td>4</td>
             <td>
               <a href="/polygonle">{POLYGONLE_TITLE}</a>
             </td>
+            <td className={styles.gameNote}>Polygonle</td>
           </tr>
           <tr>
             <td>5</td>
             <td>
               <a href="/word500">{WORD500_TITLE}</a>
             </td>
+            <td className={styles.gameNote}>Word500</td>
           </tr>
           <tr>
             <td>6</td>
             <td>
               <a href="/minesweeper">{MINESWEEPER_TITLE}</a>
             </td>
+            <td className={styles.gameNote}>Minesweeper</td>
           </tr>
           <tr>
             <td>7</td>
             <td>
               <a href="/typingtest">{TYPINGTEST_TITLE}</a>
             </td>
+            <td className={styles.gameNote}>Typing test</td>
           </tr>
           <tr>
             <td>8</td>
             <td>
               <a href="/ludo">{LUDO_TITLE}</a>
             </td>
+            <td className={styles.gameNote}>Ludo</td>
           </tr>
         </tbody>
       </table>

@@ -134,6 +134,12 @@
   background: var(--bg-card);
 }
 
+.gameNote {
+  width: 120px;
+  color: var(--text-dim);
+  font-style: italic;
+}
+
 .main h2 {
   font-size: 18px;
   font-weight: 600;
