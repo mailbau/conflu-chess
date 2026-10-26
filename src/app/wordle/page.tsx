@@ -1,6 +1,6 @@
 import { WORDLE_TITLE } from "@/components/ConfluenceShell";
 import ThemedShell from "@/components/ThemedShell";
-import { DocControlTable, FillerIntro, FillerOutro } from "@/components/BrdFiller";
+import { DocControlTable, FillerIntro, FillerOutro, DemoSection } from "@/components/BrdFiller";
 import WordleBoard from "@/components/WordleBoard";
 
 export default function WordlePage() {
@@ -18,13 +18,13 @@ export default function WordlePage() {
       />
       <FillerIntro section="verifikasi kode referensi harian" />
 
-      <h2>4. Simulasi Verifikasi Kode (Lampiran Interaktif)</h2>
-      <p>
-        Bagian berikut merupakan simulasi interaktif untuk menebak kode
-        referensi 5 digit dalam maksimal 6 percobaan, digunakan untuk menguji
-        alur validasi kode harian.
-      </p>
-      <WordleBoard />
+      <DemoSection
+        heading="4. Simulasi Verifikasi Kode (Lampiran Interaktif)"
+        description="Bagian berikut merupakan simulasi interaktif untuk menebak kode referensi 5 digit dalam maksimal 6 percobaan, digunakan untuk menguji alur validasi kode harian."
+        postmanBlurb="Send a request to guess the daily 5-character reference code within 6 attempts and test the validation flow."
+      >
+        <WordleBoard />
+      </DemoSection>
 
       <FillerOutro />
     </ThemedShell>

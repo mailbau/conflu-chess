@@ -1,7 +1,13 @@
-import styles from "@/components/ConfluenceShell.module.css";
+"use client";
 
-// Generic made-up BRD boilerplate, styled after a real Confluence doc control
-// table, used to disguise the game pages as ordinary internal paperwork.
+import { useTheme } from "@/lib/theme";
+import confluenceStyles from "@/components/ConfluenceShell.module.css";
+import postmanStyles from "@/components/PostmanFiller.module.css";
+
+// Confluence disguise: made-up BRD boilerplate styled after a real doc
+// control table. Postman disguise: the same four facts reframed as request
+// metadata, since a "document control" table makes no sense inside an API
+// client -- each theme needs filler that actually fits its own paradigm.
 export function DocControlTable({
   docTitle,
   projectName,
@@ -13,8 +19,52 @@ export function DocControlTable({
   divisi: string;
   appName: string;
 }) {
+  const { theme } = useTheme();
+
+  if (theme === "postman") {
+    return (
+      <table className={postmanStyles.metaTable}>
+        <tbody>
+          <tr>
+            <td colSpan={2} style={{ fontWeight: 700, textAlign: "center" }}>
+              REQUEST METADATA
+            </td>
+          </tr>
+          <tr>
+            <td>Request Name</td>
+            <td>{projectName}</td>
+          </tr>
+          <tr>
+            <td>Collection</td>
+            <td>2026 - COG Reconciliation APIs</td>
+          </tr>
+          <tr>
+            <td>Owning Team</td>
+            <td>{divisi}</td>
+          </tr>
+          <tr>
+            <td>Service</td>
+            <td>{appName}</td>
+          </tr>
+          <tr>
+            <td>Environment</td>
+            <td>Production</td>
+          </tr>
+          <tr>
+            <td>Auth Type</td>
+            <td>Bearer Token</td>
+          </tr>
+          <tr>
+            <td>Reference Doc</td>
+            <td>{docTitle}</td>
+          </tr>
+        </tbody>
+      </table>
+    );
+  }
+
   return (
-    <table className={styles.propsTable}>
+    <table className={confluenceStyles.propsTable}>
       <tbody>
         <tr>
           <td colSpan={2} style={{ fontWeight: 700, textAlign: "center" }}>
@@ -59,6 +109,32 @@ export function DocControlTable({
 }
 
 export function FillerIntro({ section }: { section: string }) {
+  const { theme } = useTheme();
+
+  if (theme === "postman") {
+    return (
+      <div className={postmanStyles.docSection}>
+        <p>
+          This endpoint is part of the internal reconciliation toolkit covering{" "}
+          {section}. Use the environment variable <code>{"{{base_url}}"}</code> to target
+          staging or production.
+        </p>
+        <h3>Query Parameters</h3>
+        <p>
+          <span className={postmanStyles.paramLabel}>branch_id</span> (required) — the branch
+          code to reconcile against.
+          <br />
+          <span className={postmanStyles.paramLabel}>as_of_date</span> (optional) — defaults to
+          the current business date.
+        </p>
+        <h3>Example Request</h3>
+        <div className={postmanStyles.codeBlock}>
+          {`curl -X GET "{{base_url}}/v2/cog/reconcile" \\\n  -H "Authorization: Bearer {{token}}" \\\n  -d '{ "branch_id": "0452", "as_of_date": "2026-10-26" }'`}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <p>
@@ -88,7 +164,60 @@ export function FillerIntro({ section }: { section: string }) {
   );
 }
 
+// wraps the embedded game: Confluence gets a numbered "Lampiran Interaktif"
+// section like the rest of the fake BRD; Postman gets a "Try it" block like
+// a real request's example/test panel
+export function DemoSection({
+  heading,
+  description,
+  postmanBlurb,
+  children,
+}: {
+  heading: string;
+  description: string;
+  postmanBlurb: string;
+  children: React.ReactNode;
+}) {
+  const { theme } = useTheme();
+
+  if (theme === "postman") {
+    return (
+      <div className={postmanStyles.docSection}>
+        <h3>Try it</h3>
+        <p>{postmanBlurb}</p>
+        {children}
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <h2>{heading}</h2>
+      <p>{description}</p>
+      {children}
+    </>
+  );
+}
+
 export function FillerOutro() {
+  const { theme } = useTheme();
+
+  if (theme === "postman") {
+    return (
+      <div className={postmanStyles.docSection}>
+        <h3>Example Response</h3>
+        <div className={postmanStyles.codeBlock}>
+          {`{\n  "status": "ok",\n  "branch_id": "0452",\n  "reconciled": true,\n  "generated_at": "2026-10-26T09:15:00Z"\n}`}
+        </div>
+        <h3>Notes</h3>
+        <p>
+          Response shape is subject to change pending the next collection sync. Pin a
+          version via the <code>Accept-Version</code> header if you need stability.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <>
       <h2>9. Catatan Tambahan</h2>

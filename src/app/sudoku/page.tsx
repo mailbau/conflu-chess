@@ -1,6 +1,6 @@
 import { SUDOKU_TITLE } from "@/components/ConfluenceShell";
 import ThemedShell from "@/components/ThemedShell";
-import { DocControlTable, FillerIntro, FillerOutro } from "@/components/BrdFiller";
+import { DocControlTable, FillerIntro, FillerOutro, DemoSection } from "@/components/BrdFiller";
 import SudokuBoard from "@/components/SudokuBoard";
 
 export default function SudokuPage() {
@@ -18,13 +18,13 @@ export default function SudokuPage() {
       />
       <FillerIntro section="rekonsiliasi harian" />
 
-      <h2>4. Matrix Rekonsiliasi (Lampiran Interaktif)</h2>
-      <p>
-        Bagian berikut merupakan grid validasi 9x9 yang digunakan untuk
-        menguji konsistensi data rekonsiliasi harian berdasarkan tingkat
-        kompleksitas kasus.
-      </p>
-      <SudokuBoard />
+      <DemoSection
+        heading="4. Matrix Rekonsiliasi (Lampiran Interaktif)"
+        description="Bagian berikut merupakan grid validasi 9x9 yang digunakan untuk menguji konsistensi data rekonsiliasi harian berdasarkan tingkat kompleksitas kasus."
+        postmanBlurb="Send a request with a selected difficulty to generate a 9x9 validation grid and test it live."
+      >
+        <SudokuBoard />
+      </DemoSection>
 
       <FillerOutro />
     </ThemedShell>

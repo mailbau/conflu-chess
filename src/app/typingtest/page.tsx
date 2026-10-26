@@ -1,6 +1,6 @@
 import { TYPINGTEST_TITLE } from "@/components/ConfluenceShell";
 import ThemedShell from "@/components/ThemedShell";
-import { DocControlTable, FillerIntro, FillerOutro } from "@/components/BrdFiller";
+import { DocControlTable, FillerIntro, FillerOutro, DemoSection } from "@/components/BrdFiller";
 import TypingTestBoard from "@/components/TypingTestBoard";
 
 export default function TypingTestPage() {
@@ -18,13 +18,13 @@ export default function TypingTestPage() {
       />
       <FillerIntro section="pengukuran kecepatan input operator" />
 
-      <h2>4. Simulasi Benchmark Input (Lampiran Interaktif)</h2>
-      <p>
-        Bagian berikut mensimulasikan uji kecepatan input operator terhadap
-        rangkaian teks acak guna memperoleh baseline kata per menit (KPM) dan
-        tingkat akurasi pengetikan sebelum proses rollout sistem.
-      </p>
-      <TypingTestBoard />
+      <DemoSection
+        heading="4. Simulasi Benchmark Input (Lampiran Interaktif)"
+        description="Bagian berikut mensimulasikan uji kecepatan input operator terhadap rangkaian teks acak guna memperoleh baseline kata per menit (KPM) dan tingkat akurasi pengetikan sebelum proses rollout sistem."
+        postmanBlurb="Send a request to benchmark operator input speed against random text and get a words-per-minute and accuracy baseline."
+      >
+        <TypingTestBoard />
+      </DemoSection>
 
       <FillerOutro />
     </ThemedShell>

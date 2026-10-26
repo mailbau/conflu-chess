@@ -1,6 +1,6 @@
 import { POLYGONLE_TITLE } from "@/components/ConfluenceShell";
 import ThemedShell from "@/components/ThemedShell";
-import { DocControlTable, FillerIntro, FillerOutro } from "@/components/BrdFiller";
+import { DocControlTable, FillerIntro, FillerOutro, DemoSection } from "@/components/BrdFiller";
 import PolygonleBoard from "@/components/PolygonleBoard";
 
 export default function PolygonlePage() {
@@ -18,13 +18,13 @@ export default function PolygonlePage() {
       />
       <FillerIntro section="validasi pola simbol transaksi" />
 
-      <h2>4. Simulasi Validasi Pola (Lampiran Interaktif)</h2>
-      <p>
-        Bagian berikut mensimulasikan pencocokan pola simbol terhadap kode
-        referensi tersembunyi, digunakan untuk menguji konsistensi mapping
-        antara simbol dan karakter.
-      </p>
-      <PolygonleBoard />
+      <DemoSection
+        heading="4. Simulasi Validasi Pola (Lampiran Interaktif)"
+        description="Bagian berikut mensimulasikan pencocokan pola simbol terhadap kode referensi tersembunyi, digunakan untuk menguji konsistensi mapping antara simbol dan karakter."
+        postmanBlurb="Send a request to match symbol patterns against a hidden reference code and test the mapping consistency."
+      >
+        <PolygonleBoard />
+      </DemoSection>
 
       <FillerOutro />
     </ThemedShell>

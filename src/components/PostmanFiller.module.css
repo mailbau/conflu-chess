@@ -1,0 +1,47 @@
+.metaTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  font-size: 13px;
+  background: #232323;
+  border: 1px solid #3c3c3c;
+}
+
+.metaTable td {
+  border: 1px solid #3c3c3c;
+  padding: 7px 12px;
+  color: #e5e5e5;
+}
+
+.metaTable td:first-child {
+  width: 180px;
+  color: #9a9a9a;
+  background: #262626;
+}
+
+.docSection h2,
+.docSection h3 {
+  color: #e5e5e5;
+}
+
+.docSection p {
+  color: #c8c8c8;
+}
+
+.codeBlock {
+  background: #1a1a1a;
+  border: 1px solid #3c3c3c;
+  border-radius: 4px;
+  padding: 12px 14px;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
+  font-size: 12.5px;
+  color: #9fd88a;
+  overflow-x: auto;
+  white-space: pre;
+  margin: 10px 0 18px;
+}
+
+.paramLabel {
+  color: #e3a836;
+  font-weight: 600;
+}

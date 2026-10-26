@@ -1,6 +1,6 @@
 import { KAKURO_TITLE } from "@/components/ConfluenceShell";
 import ThemedShell from "@/components/ThemedShell";
-import { DocControlTable, FillerIntro, FillerOutro } from "@/components/BrdFiller";
+import { DocControlTable, FillerIntro, FillerOutro, DemoSection } from "@/components/BrdFiller";
 import KakuroBoard from "@/components/KakuroBoard";
 
 export default function KakuroPage() {
@@ -18,13 +18,13 @@ export default function KakuroPage() {
       />
       <FillerIntro section="rekonsiliasi silang jumlah nominal cabang" />
 
-      <h2>4. Simulasi Rekonsiliasi Grid (Lampiran Interaktif)</h2>
-      <p>
-        Bagian berikut mensimulasikan proses rekonsiliasi nominal pada grid
-        baris dan kolom, di mana setiap deret harus menjumlahkan angka target
-        tanpa duplikasi digit, sebelum proses rollout sistem.
-      </p>
-      <KakuroBoard />
+      <DemoSection
+        heading="4. Simulasi Rekonsiliasi Grid (Lampiran Interaktif)"
+        description="Bagian berikut mensimulasikan proses rekonsiliasi nominal pada grid baris dan kolom, di mana setiap deret harus menjumlahkan angka target tanpa duplikasi digit, sebelum proses rollout sistem."
+        postmanBlurb="Send a request to reconcile nominal amounts across a row/column grid, where every line must sum to its target with no repeated digits."
+      >
+        <KakuroBoard />
+      </DemoSection>
 
       <FillerOutro />
     </ThemedShell>

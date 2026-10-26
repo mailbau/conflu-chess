@@ -1,6 +1,6 @@
 import { CHESS_TITLE } from "@/components/ConfluenceShell";
 import ThemedShell from "@/components/ThemedShell";
-import { DocControlTable, FillerIntro, FillerOutro } from "@/components/BrdFiller";
+import { DocControlTable, FillerIntro, FillerOutro, DemoSection } from "@/components/BrdFiller";
 import ChessSetup from "@/components/ChessSetup";
 
 export default function ChessPage() {
@@ -18,13 +18,13 @@ export default function ChessPage() {
       />
       <FillerIntro section="validasi transaksi tunai" />
 
-      <h2>4. Matrix Validasi (Lampiran Interaktif)</h2>
-      <p>
-        Bagian berikut merupakan simulasi interaktif dari matrix validasi
-        yang digunakan untuk menguji skenario transaksi secara real-time
-        antara dua pihak terkait.
-      </p>
-      <ChessSetup />
+      <DemoSection
+        heading="4. Matrix Validasi (Lampiran Interaktif)"
+        description="Bagian berikut merupakan simulasi interaktif dari matrix validasi yang digunakan untuk menguji skenario transaksi secara real-time antara dua pihak terkait."
+        postmanBlurb="Send a request to open a live two-player session. Share the generated challenge link with the other party to test the real-time validation flow."
+      >
+        <ChessSetup />
+      </DemoSection>
 
       <FillerOutro />
     </ThemedShell>

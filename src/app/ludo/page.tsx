@@ -1,6 +1,6 @@
 import { LUDO_TITLE } from "@/components/ConfluenceShell";
 import ThemedShell from "@/components/ThemedShell";
-import { DocControlTable, FillerIntro, FillerOutro } from "@/components/BrdFiller";
+import { DocControlTable, FillerIntro, FillerOutro, DemoSection } from "@/components/BrdFiller";
 import LudoSetup from "@/components/ludo/LudoSetup";
 
 export default function LudoPage() {
@@ -18,13 +18,13 @@ export default function LudoPage() {
       />
       <FillerIntro section="simulasi rute distribusi kas antar cabang" />
 
-      <h2>4. Simulasi Rute Multi-Cabang (Lampiran Interaktif)</h2>
-      <p>
-        Bagian berikut mensimulasikan rute distribusi kas antar 2 sampai 4
-        cabang secara bersamaan untuk memperoleh baseline waktu tempuh dan
-        titik rawan keterlambatan sebelum proses rollout sistem.
-      </p>
-      <LudoSetup />
+      <DemoSection
+        heading="4. Simulasi Rute Multi-Cabang (Lampiran Interaktif)"
+        description="Bagian berikut mensimulasikan rute distribusi kas antar 2 sampai 4 cabang secara bersamaan untuk memperoleh baseline waktu tempuh dan titik rawan keterlambatan sebelum proses rollout sistem."
+        postmanBlurb="Send a request to open a 2-4 player session and test the branch cash route simulation in real time."
+      >
+        <LudoSetup />
+      </DemoSection>
 
       <FillerOutro />
     </ThemedShell>

@@ -1,3 +1,5 @@
+"use client";
+
 import {
   CHESS_TITLE,
   SUDOKU_TITLE,
@@ -10,9 +12,68 @@ import {
   KAKURO_TITLE,
 } from "@/components/ConfluenceShell";
 import ThemedShell from "@/components/ThemedShell";
-import styles from "@/components/ConfluenceShell.module.css";
+import { useTheme } from "@/lib/theme";
+import confluenceStyles from "@/components/ConfluenceShell.module.css";
+import postmanStyles from "@/components/PostmanFiller.module.css";
+
+const ENTRIES = [
+  { href: "/chess", title: CHESS_TITLE, game: "Chess" },
+  { href: "/sudoku", title: SUDOKU_TITLE, game: "Sudoku" },
+  { href: "/wordle", title: WORDLE_TITLE, game: "Wordle" },
+  { href: "/polygonle", title: POLYGONLE_TITLE, game: "Polygonle" },
+  { href: "/word500", title: WORD500_TITLE, game: "Word500" },
+  { href: "/minesweeper", title: MINESWEEPER_TITLE, game: "Minesweeper" },
+  { href: "/typingtest", title: TYPINGTEST_TITLE, game: "Typing test" },
+  { href: "/ludo", title: LUDO_TITLE, game: "Ludo" },
+  { href: "/kakuro", title: KAKURO_TITLE, game: "Kakuro" },
+];
 
 export default function Home() {
+  const { theme } = useTheme();
+
+  if (theme === "postman") {
+    return (
+      <ThemedShell
+        breadcrumb="Workspaces / COG Workspace"
+        title="2026 - COG Reconciliation APIs"
+        meta="Collection · 9 requests · last synced by Irmawira Shalihah on Oct 22, 2026"
+      >
+        <p>
+          This collection covers the internal reconciliation and validation
+          endpoints maintained by Central Operation Group. Every request below
+          targets the shared <code>{"{{base_url}}"}</code> environment variable.
+        </p>
+
+        <h3>Requests</h3>
+        <table className={postmanStyles.metaTable}>
+          <tbody>
+            <tr>
+              <td>No.</td>
+              <td>Request</td>
+            </tr>
+            {ENTRIES.map((e, i) => (
+              <tr key={e.href}>
+                <td>{i + 1}</td>
+                <td>
+                  <a href={e.href}>{e.title}</a>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <h3>Usage Notes</h3>
+        <p>
+          1. Requests in this collection are synced from the shared team workspace.
+          <br />
+          2. Changes to request bodies are tracked via collection version history.
+          <br />
+          3. Run the collection with the Collection Runner to validate all endpoints at once.
+        </p>
+      </ThemedShell>
+    );
+  }
+
   return (
     <ThemedShell
       breadcrumb="Spaces / Central Operation Group (COG)"
@@ -27,76 +88,22 @@ export default function Home() {
       </p>
 
       <h2>Daftar Isi</h2>
-      <table className={styles.propsTable}>
+      <table className={confluenceStyles.propsTable}>
         <tbody>
           <tr>
             <td>No.</td>
             <td>Dokumen</td>
             <td>Keterangan</td>
           </tr>
-          <tr>
-            <td>1</td>
-            <td>
-              <a href="/chess">{CHESS_TITLE}</a>
-            </td>
-            <td className={styles.gameNote}>Chess</td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>
-              <a href="/sudoku">{SUDOKU_TITLE}</a>
-            </td>
-            <td className={styles.gameNote}>Sudoku</td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>
-              <a href="/wordle">{WORDLE_TITLE}</a>
-            </td>
-            <td className={styles.gameNote}>Wordle</td>
-          </tr>
-          <tr>
-            <td>4</td>
-            <td>
-              <a href="/polygonle">{POLYGONLE_TITLE}</a>
-            </td>
-            <td className={styles.gameNote}>Polygonle</td>
-          </tr>
-          <tr>
-            <td>5</td>
-            <td>
-              <a href="/word500">{WORD500_TITLE}</a>
-            </td>
-            <td className={styles.gameNote}>Word500</td>
-          </tr>
-          <tr>
-            <td>6</td>
-            <td>
-              <a href="/minesweeper">{MINESWEEPER_TITLE}</a>
-            </td>
-            <td className={styles.gameNote}>Minesweeper</td>
-          </tr>
-          <tr>
-            <td>7</td>
-            <td>
-              <a href="/typingtest">{TYPINGTEST_TITLE}</a>
-            </td>
-            <td className={styles.gameNote}>Typing test</td>
-          </tr>
-          <tr>
-            <td>8</td>
-            <td>
-              <a href="/ludo">{LUDO_TITLE}</a>
-            </td>
-            <td className={styles.gameNote}>Ludo</td>
-          </tr>
-          <tr>
-            <td>9</td>
-            <td>
-              <a href="/kakuro">{KAKURO_TITLE}</a>
-            </td>
-            <td className={styles.gameNote}>Kakuro</td>
-          </tr>
+          {ENTRIES.map((e, i) => (
+            <tr key={e.href}>
+              <td>{i + 1}</td>
+              <td>
+                <a href={e.href}>{e.title}</a>
+              </td>
+              <td className={confluenceStyles.gameNote}>{e.game}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
 

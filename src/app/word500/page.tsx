@@ -1,6 +1,6 @@
 import { WORD500_TITLE } from "@/components/ConfluenceShell";
 import ThemedShell from "@/components/ThemedShell";
-import { DocControlTable, FillerIntro, FillerOutro } from "@/components/BrdFiller";
+import { DocControlTable, FillerIntro, FillerOutro, DemoSection } from "@/components/BrdFiller";
 import Word500Board from "@/components/Word500Board";
 
 export default function Word500Page() {
@@ -18,13 +18,13 @@ export default function Word500Page() {
       />
       <FillerIntro section="audit tersembunyi kode transaksi" />
 
-      <h2>4. Simulasi Audit (Lampiran Interaktif)</h2>
-      <p>
-        Bagian berikut mensimulasikan proses audit kode transaksi 5 digit,
-        di mana hasil pencocokan hanya ditampilkan dalam bentuk ringkasan
-        jumlah, bukan posisi detail, untuk menguji ketelitian validator.
-      </p>
-      <Word500Board />
+      <DemoSection
+        heading="4. Simulasi Audit (Lampiran Interaktif)"
+        description="Bagian berikut mensimulasikan proses audit kode transaksi 5 digit, di mana hasil pencocokan hanya ditampilkan dalam bentuk ringkasan jumlah, bukan posisi detail, untuk menguji ketelitian validator."
+        postmanBlurb="Send a request to audit a 5-character transaction code, where the response only returns count summaries, not per-position detail."
+      >
+        <Word500Board />
+      </DemoSection>
 
       <FillerOutro />
     </ThemedShell>
