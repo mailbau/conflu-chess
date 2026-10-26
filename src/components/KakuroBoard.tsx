@@ -1,18 +1,18 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { generatePuzzle } from "@/lib/kakuro/generator";
-import type { Difficulty } from "@/lib/kakuro/types";
+import { DIFFICULTIES_FOR_SIZE, SIZES, type Size } from "@/lib/kakuro/types";
 import { isSolved, wrongCellsFor } from "@/lib/kakuro/check";
-import { loadSave, writeSave, clearSave, type KakuroSave } from "@/lib/kakuroStorage";
+import { pickPuzzle } from "@/lib/kakuro/pool";
+import { loadSave, writeSave, markPlayed, type KakuroSave } from "@/lib/kakuroStorage";
 import { submitScore } from "@/lib/submitScore";
 import styles from "./KakuroBoard.module.css";
 
-const DIFFICULTIES: Difficulty[] = ["easy", "medium", "hard"];
-
-function newGame(difficulty: Difficulty): KakuroSave {
-  const puzzle = generatePuzzle(difficulty);
+async function newGame(size: Size, difficulty: string): Promise<KakuroSave> {
+  const puzzle = await pickPuzzle(size, difficulty);
   return {
+    puzzleId: puzzle.id,
+    size,
     difficulty,
     rows: puzzle.rows,
     cols: puzzle.cols,
@@ -32,12 +32,19 @@ function formatTime(total: number) {
 
 export default function KakuroBoard() {
   const [save, setSave] = useState<KakuroSave | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<[number, number] | null>(null);
   const [wrongCells, setWrongCells] = useState<Set<string>>(new Set());
   const prevSolved = useRef(false);
 
   useEffect(() => {
-    setSave(loadSave() ?? newGame("easy"));
+    const existing = loadSave();
+    if (existing) {
+      setSave(existing);
+      return;
+    }
+    startNew(9, DIFFICULTIES_FOR_SIZE[9][0]);
   }, []);
 
   useEffect(() => {
@@ -54,7 +61,8 @@ export default function KakuroBoard() {
 
   useEffect(() => {
     if (save?.solved && !prevSolved.current) {
-      submitScore("kakuro", `best_time_${save.difficulty}`, save.seconds * 1000);
+      submitScore("kakuro", `best_time_${save.size}`, save.seconds * 1000);
+      markPlayed(save.puzzleId);
     }
     prevSolved.current = save?.solved ?? false;
   }, [save?.solved]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -64,13 +72,19 @@ export default function KakuroBoard() {
     [save?.cells]
   );
 
-  if (!save) return <p>Loading…</p>;
-
-  function startNew(difficulty: Difficulty) {
-    clearSave();
-    setSave(newGame(difficulty));
-    setSelected(null);
-    setWrongCells(new Set());
+  async function startNew(size: Size, difficulty: string) {
+    setLoading(true);
+    setError(null);
+    try {
+      const next = await newGame(size, difficulty);
+      setSave(next);
+      setSelected(null);
+      setWrongCells(new Set());
+    } catch {
+      setError("Couldn't load a puzzle. Try again.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   function enterDigit(digit: string) {
@@ -99,19 +113,57 @@ export default function KakuroBoard() {
     setWrongCells(wrongCellsFor(save.runs, save.board));
   }
 
+  function move(dr: number, dc: number) {
+    if (!save || !selected) return;
+    let [r, c] = selected;
+    for (let step = 0; step < Math.max(save.rows, save.cols); step++) {
+      r += dr;
+      c += dc;
+      if (r < 0 || r >= save.rows || c < 0 || c >= save.cols) return;
+      if (isWhite[r][c]) {
+        setSelected([r, c]);
+        return;
+      }
+    }
+  }
+
   function onKeyDown(e: React.KeyboardEvent) {
     if (e.key >= "1" && e.key <= "9") enterDigit(e.key);
     else if (e.key === "Backspace" || e.key === "Delete") clearCell();
+    else if (e.key === "ArrowUp") move(-1, 0);
+    else if (e.key === "ArrowDown") move(1, 0);
+    else if (e.key === "ArrowLeft") move(0, -1);
+    else if (e.key === "ArrowRight") move(0, 1);
+    else return;
+    e.preventDefault();
   }
+
+  if (!save) return <p>{error ?? "Loading…"}</p>;
+
+  const difficulties = DIFFICULTIES_FOR_SIZE[save.size as Size];
 
   return (
     <div className={styles.wrap} tabIndex={0} onKeyDown={onKeyDown}>
       <div className={styles.difficultyPicker}>
-        {DIFFICULTIES.map((d) => (
+        {SIZES.map((s) => (
+          <button
+            key={s}
+            className={s === save.size ? styles.difficultyActive : ""}
+            onClick={() => startNew(s, DIFFICULTIES_FOR_SIZE[s][0])}
+            disabled={loading}
+          >
+            {s}x{s}
+          </button>
+        ))}
+      </div>
+
+      <div className={styles.difficultyPicker}>
+        {difficulties.map((d) => (
           <button
             key={d}
             className={d === save.difficulty ? styles.difficultyActive : ""}
-            onClick={() => startNew(d)}
+            onClick={() => startNew(save.size as Size, d)}
+            disabled={loading}
           >
             {d}
           </button>
@@ -125,11 +177,16 @@ export default function KakuroBoard() {
         <button className={styles.checkButton} onClick={check}>
           Check
         </button>
-        <button className={styles.resetButton} onClick={() => startNew(save.difficulty)}>
-          New puzzle
+        <button
+          className={styles.resetButton}
+          onClick={() => startNew(save.size as Size, save.difficulty)}
+          disabled={loading}
+        >
+          {loading ? "Loading…" : "New puzzle"}
         </button>
       </div>
 
+      {error && <div className={styles.status}>{error}</div>}
       {save.solved && <div className={styles.solvedBanner}>Solved! 🎉</div>}
 
       <div className={styles.boardScroll}>

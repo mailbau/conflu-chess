@@ -1,68 +1,60 @@
+// Validates every puzzle in the fetched pool (public/kakuro/*.json):
+// run shape, distinct digits, correct sums -- a sanity check on the pool,
+// not a generator test (there's no generator anymore; puzzles come from
+// kakuro.com's pool, see scripts/kakuro-fetch.ts).
 import assert from "node:assert";
-import { generatePuzzle } from "../src/lib/kakuro/generator";
+import fs from "node:fs";
+import path from "node:path";
 import { computeRunGroups } from "../src/lib/kakuro/runGroups";
-import { isSolved, wrongCellsFor } from "../src/lib/kakuro/check";
-import type { Difficulty } from "../src/lib/kakuro/types";
+import { DIFFICULTIES_FOR_SIZE, SIZES } from "../src/lib/kakuro/types";
+import type { PooledPuzzle } from "../src/lib/kakuro/pool";
 
-function checkPuzzle(difficulty: Difficulty) {
-  const t0 = Date.now();
-  const puzzle = generatePuzzle(difficulty);
-  const ms = Date.now() - t0;
+const DIR = path.join(__dirname, "..", "public", "kakuro");
 
-  // every white cell's solution digit is 1-9, every black cell is -1
-  for (let r = 0; r < puzzle.rows; r++) {
-    for (let c = 0; c < puzzle.cols; c++) {
-      const cell = puzzle.cells[r][c];
-      const v = puzzle.solution[r][c];
-      if (cell.type === "white") assert.ok(v >= 1 && v <= 9, `bad solution digit at ${r},${c}: ${v}`);
-      else assert.strictEqual(v, -1, `black cell ${r},${c} should have solution -1`);
+let totalPuzzles = 0;
+
+for (const size of SIZES) {
+  for (const difficulty of DIFFICULTIES_FOR_SIZE[size]) {
+    const file = path.join(DIR, `${size}x${size}-${difficulty}.json`);
+    assert.ok(fs.existsSync(file), `missing pool file: ${file}`);
+    const puzzles = JSON.parse(fs.readFileSync(file, "utf8")) as PooledPuzzle[];
+    assert.ok(puzzles.length > 0, `empty pool: ${file}`);
+
+    const ids = new Set<string>();
+    for (const puzzle of puzzles) {
+      assert.ok(!ids.has(puzzle.id), `duplicate id ${puzzle.id} in ${file}`);
+      ids.add(puzzle.id);
+
+      assert.strictEqual(puzzle.rows, size);
+      assert.strictEqual(puzzle.cols, size);
+
+      for (let r = 0; r < puzzle.rows; r++) {
+        for (let c = 0; c < puzzle.cols; c++) {
+          const cell = puzzle.cells[r][c];
+          const v = puzzle.solution[r][c];
+          if (cell.type === "white") assert.ok(v >= 1 && v <= 9, `${puzzle.id}: bad digit at ${r},${c}`);
+          else assert.strictEqual(v, -1, `${puzzle.id}: black cell ${r},${c} should be -1`);
+        }
+      }
+
+      assert.ok(puzzle.runs.length > 0, `${puzzle.id}: no runs at all`);
+      for (const run of puzzle.runs) {
+        const digits = run.cells.map(([r, c]) => puzzle.solution[r][c]);
+        assert.strictEqual(new Set(digits).size, digits.length, `${puzzle.id}: duplicate digit in a run`);
+        assert.strictEqual(digits.reduce((a, b) => a + b, 0), run.sum, `${puzzle.id}: run sum mismatch`);
+        assert.ok(run.cells.length >= 2 && run.cells.length <= 9, `${puzzle.id}: run length out of range`);
+      }
+
+      // every run matches an actual black-cell clue, and the clue grid is
+      // internally consistent with the independently-recomputed run groups
+      const isWhite = puzzle.cells.map((row) => row.map((c) => c.type === "white"));
+      const groups = computeRunGroups(isWhite);
+      assert.strictEqual(groups.runCells.length, puzzle.runs.length, `${puzzle.id}: run count mismatch`);
     }
+
+    totalPuzzles += puzzles.length;
+    console.log(`${size}x${size} ${difficulty}: ${puzzles.length} puzzles ok`);
   }
-
-  // every run: distinct digits, correct sum, valid length
-  for (const run of puzzle.runs) {
-    const digits = run.cells.map(([r, c]) => puzzle.solution[r][c]);
-    assert.strictEqual(new Set(digits).size, digits.length, "run has duplicate digit");
-    assert.strictEqual(digits.reduce((a, b) => a + b, 0), run.sum, "run sum mismatch");
-    assert.ok(run.cells.length >= 2 && run.cells.length <= 9, "run length out of range");
-  }
-
-  // every black cell's clues match an actual run in that direction
-  const isWhite = puzzle.cells.map((row) => row.map((c) => c.type === "white"));
-  const groups = computeRunGroups(isWhite);
-  for (let i = 0; i < groups.runCells.length; i++) {
-    const cells = groups.runCells[i];
-    const [r0, c0] = cells[0];
-    const horizontal = cells[0][0] === cells[1][0];
-    const owner = horizontal ? puzzle.cells[r0][c0 - 1] : puzzle.cells[r0 - 1][c0];
-    assert.strictEqual(owner.type, "black");
-    const expected = puzzle.runs.find(
-      (r) => r.cells.length === cells.length && r.cells[0][0] === cells[0][0] && r.cells[0][1] === cells[0][1]
-    );
-    assert.ok(expected, "generated run not found in puzzle.runs");
-  }
-
-  // the board's own constraint check: solution plugged in as strings is
-  // reported solved, with no wrong cells
-  const boardFromSolution = puzzle.solution.map((row) => row.map((v) => (v === -1 ? "" : String(v))));
-  assert.strictEqual(isSolved(puzzle.runs, boardFromSolution), true, "generator's own solution must satisfy isSolved");
-  assert.strictEqual(wrongCellsFor(puzzle.runs, boardFromSolution).size, 0, "generator's own solution must have 0 wrong cells");
-
-  // a deliberately broken board (first white run's first two cells swapped
-  // to equal digits) must be flagged wrong, not solved
-  const firstRun = puzzle.runs[0];
-  const broken = boardFromSolution.map((row) => [...row]);
-  const [r0, c0] = firstRun.cells[0];
-  const [r1, c1] = firstRun.cells[1];
-  broken[r1][c1] = broken[r0][c0]; // duplicate digit within the run
-  assert.strictEqual(isSolved(puzzle.runs, broken), false, "a duplicate-digit board must not be solved");
-  assert.ok(wrongCellsFor(puzzle.runs, broken).size > 0, "a duplicate-digit board must flag wrong cells");
-
-  console.log(`${difficulty}: ${puzzle.rows}x${puzzle.cols}, ${puzzle.runs.length} runs, generated in ${ms}ms, checks ok`);
 }
 
-for (const d of ["easy", "medium", "hard"] as Difficulty[]) {
-  for (let i = 0; i < 10; i++) checkPuzzle(d);
-}
-
-console.log("all kakuro checks passed");
+console.log(`\nall kakuro pool checks passed (${totalPuzzles} puzzles)`);

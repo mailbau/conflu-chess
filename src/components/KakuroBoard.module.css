@@ -50,6 +50,11 @@
   border-color: var(--blue);
 }
 
+.status {
+  font-size: 13px;
+  color: #f87171;
+}
+
 .solvedBanner {
   padding: 10px 16px;
   background: #14301f;

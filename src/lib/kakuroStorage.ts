@@ -1,7 +1,9 @@
-import type { Cell, Difficulty, Run } from "./kakuro/types";
+import type { Cell, Run } from "./kakuro/types";
 
 export type KakuroSave = {
-  difficulty: Difficulty;
+  puzzleId: string;
+  size: number;
+  difficulty: string;
   rows: number;
   cols: number;
   cells: Cell[][];
@@ -12,6 +14,7 @@ export type KakuroSave = {
 };
 
 const KEY = "kakuro-save";
+const PLAYED_KEY = "kakuro-played-ids";
 
 export function loadSave(): KakuroSave | null {
   try {
@@ -33,6 +36,27 @@ export function writeSave(save: KakuroSave) {
 export function clearSave() {
   try {
     localStorage.removeItem(KEY);
+  } catch {
+    // ignore
+  }
+}
+
+// tracks which puzzle IDs have already been played, so "new puzzle" doesn't
+// repeat one until the whole pool for that size+difficulty is exhausted
+export function loadPlayedIds(): Set<string> {
+  try {
+    const raw = localStorage.getItem(PLAYED_KEY);
+    return raw ? new Set(JSON.parse(raw)) : new Set();
+  } catch {
+    return new Set();
+  }
+}
+
+export function markPlayed(id: string) {
+  try {
+    const ids = loadPlayedIds();
+    ids.add(id);
+    localStorage.setItem(PLAYED_KEY, JSON.stringify([...ids]));
   } catch {
     // ignore
   }
