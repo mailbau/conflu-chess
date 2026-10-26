@@ -1,10 +1,11 @@
-import ConfluenceShell, { WORDLE_TITLE } from "@/components/ConfluenceShell";
+import { WORDLE_TITLE } from "@/components/ConfluenceShell";
+import ThemedShell from "@/components/ThemedShell";
 import { DocControlTable, FillerIntro, FillerOutro } from "@/components/BrdFiller";
 import WordleBoard from "@/components/WordleBoard";
 
 export default function WordlePage() {
   return (
-    <ConfluenceShell
+    <ThemedShell
       breadcrumb="Spaces / 2026 - Central Operation Group (COG)"
       title={WORDLE_TITLE}
       meta="Created by Febrika Kusuma Pertiwi, last updated by Irmawira Shalihah on Oct 22, 2026 · 7 minute read"
@@ -26,6 +27,6 @@ export default function WordlePage() {
       <WordleBoard />
 
       <FillerOutro />
-    </ConfluenceShell>
+    </ThemedShell>
   );
 }

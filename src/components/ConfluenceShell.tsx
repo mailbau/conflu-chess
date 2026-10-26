@@ -17,7 +17,7 @@ export const TYPINGTEST_TITLE = "BRD 2026 047 OPS COG Pengukuran Kecepatan Input
 export const LUDO_TITLE = "BRD 2024 MCR OPS 058 Simulasi Rute Distribusi Kas Antar Cabang";
 export const KAKURO_TITLE = "BRD 2026 061 OPS COG Rekonsiliasi Silang Jumlah Nominal Cabang";
 
-const REAL_LINKS = [
+export const REAL_LINKS = [
   { href: "/", label: "2026 - Central Operation Group (COG)" },
   { href: "/chess", label: CHESS_TITLE },
   { href: "/sudoku", label: SUDOKU_TITLE },
@@ -30,7 +30,7 @@ const REAL_LINKS = [
   { href: "/kakuro", label: KAKURO_TITLE },
 ];
 
-const DECORATIVE_TITLES = [
+export const DECORATIVE_TITLES = [
   "BRD 2026 048 OPS COG Enhancement SOR Kliring Kredit Incoming",
   "BRD 2026 049 OPS COG Enhancement Berita Acara Card Destruction",
   "BRD 2026 053 OPS COG RPA Auto Proceed Guarantee",

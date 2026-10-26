@@ -1,4 +1,5 @@
-import ConfluenceShell, { LUDO_TITLE } from "@/components/ConfluenceShell";
+import { LUDO_TITLE } from "@/components/ConfluenceShell";
+import ThemedShell from "@/components/ThemedShell";
 import { DocControlTable, FillerIntro, FillerOutro } from "@/components/BrdFiller";
 import LudoGame from "@/components/ludo/LudoGame";
 
@@ -7,7 +8,7 @@ export const instant = false;
 export default async function LudoGamePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   return (
-    <ConfluenceShell
+    <ThemedShell
       breadcrumb="Spaces / 2026 - Central Operation Group (COG)"
       title={LUDO_TITLE}
       meta="Created by Febrika Kusuma Pertiwi, last updated by Irmawira Shalihah on Oct 26, 2026 · 9 minute read"
@@ -24,6 +25,6 @@ export default async function LudoGamePage({ params }: { params: Promise<{ id: s
       <LudoGame gameId={id} />
 
       <FillerOutro />
-    </ConfluenceShell>
+    </ThemedShell>
   );
 }

@@ -1,10 +1,11 @@
-import ConfluenceShell, { KAKURO_TITLE } from "@/components/ConfluenceShell";
+import { KAKURO_TITLE } from "@/components/ConfluenceShell";
+import ThemedShell from "@/components/ThemedShell";
 import { DocControlTable, FillerIntro, FillerOutro } from "@/components/BrdFiller";
 import KakuroBoard from "@/components/KakuroBoard";
 
 export default function KakuroPage() {
   return (
-    <ConfluenceShell
+    <ThemedShell
       breadcrumb="Spaces / 2026 - Central Operation Group (COG)"
       title={KAKURO_TITLE}
       meta="Created by Febrika Kusuma Pertiwi, last updated by Irmawira Shalihah on Oct 26, 2026 · 11 minute read"
@@ -26,6 +27,6 @@ export default function KakuroPage() {
       <KakuroBoard />
 
       <FillerOutro />
-    </ConfluenceShell>
+    </ThemedShell>
   );
 }

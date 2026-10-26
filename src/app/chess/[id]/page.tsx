@@ -1,4 +1,5 @@
-import ConfluenceShell, { CHESS_TITLE } from "@/components/ConfluenceShell";
+import { CHESS_TITLE } from "@/components/ConfluenceShell";
+import ThemedShell from "@/components/ThemedShell";
 import { DocControlTable } from "@/components/BrdFiller";
 import ChessGame from "@/components/ChessGame";
 
@@ -11,7 +12,7 @@ export default async function ChessGamePage({
 }) {
   const { id } = await params;
   return (
-    <ConfluenceShell
+    <ThemedShell
       breadcrumb="Spaces / 2026 - Central Operation Group (COG) / Lampiran"
       title={`${CHESS_TITLE} - Lampiran Teknis`}
       meta="Created by Febrika Kusuma Pertiwi · 3 minute read"
@@ -28,6 +29,6 @@ export default async function ChessGamePage({
         sistem secara langsung. Status sesi diperbarui otomatis.
       </p>
       <ChessGame gameId={id} />
-    </ConfluenceShell>
+    </ThemedShell>
   );
 }

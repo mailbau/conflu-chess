@@ -1,10 +1,11 @@
-import ConfluenceShell, { SUDOKU_TITLE } from "@/components/ConfluenceShell";
+import { SUDOKU_TITLE } from "@/components/ConfluenceShell";
+import ThemedShell from "@/components/ThemedShell";
 import { DocControlTable, FillerIntro, FillerOutro } from "@/components/BrdFiller";
 import SudokuBoard from "@/components/SudokuBoard";
 
 export default function SudokuPage() {
   return (
-    <ConfluenceShell
+    <ThemedShell
       breadcrumb="Spaces / 2026 - Central Operation Group (COG)"
       title={SUDOKU_TITLE}
       meta="Created by Febrika Kusuma Pertiwi, last updated by Irmawira Shalihah on Oct 22, 2026 · 9 minute read"
@@ -26,6 +27,6 @@ export default function SudokuPage() {
       <SudokuBoard />
 
       <FillerOutro />
-    </ConfluenceShell>
+    </ThemedShell>
   );
 }

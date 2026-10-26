@@ -1,10 +1,11 @@
-import ConfluenceShell, { TYPINGTEST_TITLE } from "@/components/ConfluenceShell";
+import { TYPINGTEST_TITLE } from "@/components/ConfluenceShell";
+import ThemedShell from "@/components/ThemedShell";
 import { DocControlTable, FillerIntro, FillerOutro } from "@/components/BrdFiller";
 import TypingTestBoard from "@/components/TypingTestBoard";
 
 export default function TypingTestPage() {
   return (
-    <ConfluenceShell
+    <ThemedShell
       breadcrumb="Spaces / 2026 - Central Operation Group (COG)"
       title={TYPINGTEST_TITLE}
       meta="Created by Febrika Kusuma Pertiwi, last updated by Irmawira Shalihah on Oct 26, 2026 · 8 minute read"
@@ -26,6 +27,6 @@ export default function TypingTestPage() {
       <TypingTestBoard />
 
       <FillerOutro />
-    </ConfluenceShell>
+    </ThemedShell>
   );
 }

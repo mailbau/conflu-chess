@@ -1,10 +1,11 @@
-import ConfluenceShell, { CHESS_TITLE } from "@/components/ConfluenceShell";
+import { CHESS_TITLE } from "@/components/ConfluenceShell";
+import ThemedShell from "@/components/ThemedShell";
 import { DocControlTable, FillerIntro, FillerOutro } from "@/components/BrdFiller";
 import ChessSetup from "@/components/ChessSetup";
 
 export default function ChessPage() {
   return (
-    <ConfluenceShell
+    <ThemedShell
       breadcrumb="Spaces / 2026 - Central Operation Group (COG)"
       title={CHESS_TITLE}
       meta="Created by Febrika Kusuma Pertiwi, last updated by Irmawira Shalihah on Oct 22, 2026 · 12 minute read"
@@ -26,6 +27,6 @@ export default function ChessPage() {
       <ChessSetup />
 
       <FillerOutro />
-    </ConfluenceShell>
+    </ThemedShell>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import ConfluenceShell from "@/components/ConfluenceShell";
+import ThemedShell from "@/components/ThemedShell";
 import { SCORE_REGISTRY } from "@/lib/scoreRegistry";
 import styles from "./leaderboard.module.css";
 
@@ -46,7 +46,7 @@ export default function LeaderboardPage() {
   }, [game, metric]);
 
   return (
-    <ConfluenceShell
+    <ThemedShell
       breadcrumb="Spaces / 2026 - Central Operation Group (COG)"
       title="Leaderboard"
       meta="Top scores across every game. Sign in to show up here."
@@ -103,6 +103,6 @@ export default function LeaderboardPage() {
           </tbody>
         </table>
       </div>
-    </ConfluenceShell>
+    </ThemedShell>
   );
 }

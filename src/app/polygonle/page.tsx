@@ -1,10 +1,11 @@
-import ConfluenceShell, { POLYGONLE_TITLE } from "@/components/ConfluenceShell";
+import { POLYGONLE_TITLE } from "@/components/ConfluenceShell";
+import ThemedShell from "@/components/ThemedShell";
 import { DocControlTable, FillerIntro, FillerOutro } from "@/components/BrdFiller";
 import PolygonleBoard from "@/components/PolygonleBoard";
 
 export default function PolygonlePage() {
   return (
-    <ConfluenceShell
+    <ThemedShell
       breadcrumb="Spaces / 2026 - Central Operation Group (COG)"
       title={POLYGONLE_TITLE}
       meta="Created by Febrika Kusuma Pertiwi, last updated by Irmawira Shalihah on Oct 22, 2026 · 6 minute read"
@@ -26,6 +27,6 @@ export default function PolygonlePage() {
       <PolygonleBoard />
 
       <FillerOutro />
-    </ConfluenceShell>
+    </ThemedShell>
   );
 }

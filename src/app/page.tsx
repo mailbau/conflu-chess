@@ -1,4 +1,4 @@
-import ConfluenceShell, {
+import {
   CHESS_TITLE,
   SUDOKU_TITLE,
   WORDLE_TITLE,
@@ -9,11 +9,12 @@ import ConfluenceShell, {
   LUDO_TITLE,
   KAKURO_TITLE,
 } from "@/components/ConfluenceShell";
+import ThemedShell from "@/components/ThemedShell";
 import styles from "@/components/ConfluenceShell.module.css";
 
 export default function Home() {
   return (
-    <ConfluenceShell
+    <ThemedShell
       breadcrumb="Spaces / Central Operation Group (COG)"
       title="2026 - Central Operation Group (COG)"
       meta="Created by Febrika Kusuma Pertiwi, last updated by Irmawira Shalihah on Oct 22, 2026 · 2 minute read"
@@ -108,6 +109,6 @@ export default function Home() {
         3. Setiap task terkait tahap pendefinisian kebutuhan agar dibuat dan
         selalu diperbarui pada tool Confluence.
       </p>
-    </ConfluenceShell>
+    </ThemedShell>
   );
 }

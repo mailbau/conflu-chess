@@ -1,10 +1,11 @@
-import ConfluenceShell, { MINESWEEPER_TITLE } from "@/components/ConfluenceShell";
+import { MINESWEEPER_TITLE } from "@/components/ConfluenceShell";
+import ThemedShell from "@/components/ThemedShell";
 import { DocControlTable, FillerIntro, FillerOutro } from "@/components/BrdFiller";
 import MinesweeperBoard from "@/components/MinesweeperBoard";
 
 export default function MinesweeperPage() {
   return (
-    <ConfluenceShell
+    <ThemedShell
       breadcrumb="Spaces / 2026 - Central Operation Group (COG)"
       title={MINESWEEPER_TITLE}
       meta="Created by Febrika Kusuma Pertiwi, last updated by Irmawira Shalihah on Oct 23, 2026 · 10 minute read"
@@ -26,6 +27,6 @@ export default function MinesweeperPage() {
       <MinesweeperBoard />
 
       <FillerOutro />
-    </ConfluenceShell>
+    </ThemedShell>
   );
 }

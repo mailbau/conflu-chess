@@ -1,10 +1,11 @@
-import ConfluenceShell, { WORD500_TITLE } from "@/components/ConfluenceShell";
+import { WORD500_TITLE } from "@/components/ConfluenceShell";
+import ThemedShell from "@/components/ThemedShell";
 import { DocControlTable, FillerIntro, FillerOutro } from "@/components/BrdFiller";
 import Word500Board from "@/components/Word500Board";
 
 export default function Word500Page() {
   return (
-    <ConfluenceShell
+    <ThemedShell
       breadcrumb="Spaces / 2026 - Central Operation Group (COG)"
       title={WORD500_TITLE}
       meta="Created by Febrika Kusuma Pertiwi, last updated by Irmawira Shalihah on Oct 22, 2026 · 8 minute read"
@@ -26,6 +27,6 @@ export default function Word500Page() {
       <Word500Board />
 
       <FillerOutro />
-    </ConfluenceShell>
+    </ThemedShell>
   );
 }

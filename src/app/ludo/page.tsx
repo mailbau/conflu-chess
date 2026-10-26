@@ -1,10 +1,11 @@
-import ConfluenceShell, { LUDO_TITLE } from "@/components/ConfluenceShell";
+import { LUDO_TITLE } from "@/components/ConfluenceShell";
+import ThemedShell from "@/components/ThemedShell";
 import { DocControlTable, FillerIntro, FillerOutro } from "@/components/BrdFiller";
 import LudoSetup from "@/components/ludo/LudoSetup";
 
 export default function LudoPage() {
   return (
-    <ConfluenceShell
+    <ThemedShell
       breadcrumb="Spaces / 2026 - Central Operation Group (COG)"
       title={LUDO_TITLE}
       meta="Created by Febrika Kusuma Pertiwi, last updated by Irmawira Shalihah on Oct 26, 2026 · 9 minute read"
@@ -26,6 +27,6 @@ export default function LudoPage() {
       <LudoSetup />
 
       <FillerOutro />
-    </ConfluenceShell>
+    </ThemedShell>
   );
 }
