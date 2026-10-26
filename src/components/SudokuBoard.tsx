@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { getSudoku } from "sudoku-gen";
 import type { Difficulty } from "sudoku-gen/dist/types/difficulty.type";
 import styles from "./SudokuBoard.module.css";
 import { loadSave, writeSave, clearSave, type SudokuSave } from "@/lib/sudokuStorage";
+import { submitScore } from "@/lib/submitScore";
 
 const DIFFICULTIES: Difficulty[] = ["easy", "medium", "hard", "expert"];
 
@@ -42,6 +43,14 @@ export default function SudokuBoard() {
   const [save, setSave] = useState<SudokuSave | null>(null);
   const [selected, setSelected] = useState<number | null>(null);
   const [notesMode, setNotesMode] = useState(false);
+  const prevSolved = useRef(false);
+
+  useEffect(() => {
+    if (save?.solved && !prevSolved.current) {
+      submitScore("sudoku", `best_time_${save.difficulty}`, save.seconds * 1000);
+    }
+    prevSolved.current = save?.solved ?? false;
+  }, [save?.solved]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // load existing game or start a new easy one, client-side only
   useEffect(() => {

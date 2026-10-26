@@ -1,0 +1,49 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 520px;
+}
+
+.gameTabs,
+.metricTabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.gameTabs button,
+.metricTabs button {
+  padding: 6px 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.tabActive {
+  background: var(--blue-bg) !important;
+  color: var(--blue) !important;
+  border-color: var(--blue) !important;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.table th,
+.table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+
+.table th {
+  color: var(--text-dim);
+  font-weight: 600;
+  font-size: 12px;
+}

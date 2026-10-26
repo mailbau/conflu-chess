@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { randomWords } from "@/lib/typingWords";
+import { submitScore } from "@/lib/submitScore";
 import styles from "./TypingTestBoard.module.css";
 
 const DURATIONS = [15, 30, 60];
@@ -66,6 +67,7 @@ export default function TypingTestBoard() {
     const accuracy = totalChars > 0 ? Math.round((correctChars / totalChars) * 100) : 100;
     setResult({ wpm, accuracy: Math.min(100, accuracy), raw });
     setPhase("done");
+    submitScore("typingtest", `best_wpm_${durationRef.current}`, wpm);
   }
 
   useEffect(() => {
@@ -81,7 +83,7 @@ export default function TypingTestBoard() {
       }
     }, 200);
     return () => clearInterval(id);
-  }, [phase]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [phase]);
 
   function handleChange(value: string) {
     if (phase === "done") return;

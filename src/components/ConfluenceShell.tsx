@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import AuthWidget from "./AuthWidget";
 import styles from "./ConfluenceShell.module.css";
 
 // Only these two go anywhere; the rest are inert filler so the sidebar reads
@@ -65,6 +66,7 @@ export default function ConfluenceShell({
           <span>Analytics</span>
         </nav>
         <input className={styles.search} placeholder="Search" readOnly />
+        <AuthWidget />
       </header>
 
       <div className={styles.body}>

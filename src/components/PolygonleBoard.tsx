@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { dailyWord, randomWord, shapesForWord, todayDateKey, type Token } from "@/lib/polygonle";
 import { scoreGuess, type LetterStatus } from "@/lib/wordScoring";
 import { loadSave, writeSave, type PolygonleSave } from "@/lib/polygonleStorage";
+import { submitScore } from "@/lib/submitScore";
 import styles from "./PolygonleBoard.module.css";
 
 const MAX_GUESSES = 6;
@@ -85,6 +86,7 @@ export default function PolygonleBoard() {
     writeSave(next);
     setSave(next);
     setCurrent("");
+    if (won) submitScore("polygonle", "wins", 1);
   }
 
   function startNewFree() {

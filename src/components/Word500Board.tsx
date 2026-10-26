@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { dailyWord, isValidGuess, pickRandomWord, todayDateKey } from "@/lib/word500";
 import { scoreGuess } from "@/lib/wordScoring";
 import { loadSave, writeSave, type Mark, type Word500Save } from "@/lib/word500Storage";
+import { submitScore } from "@/lib/submitScore";
 import styles from "./Word500Board.module.css";
 
 const MAX_GUESSES = 8;
@@ -103,6 +104,7 @@ export default function Word500Board() {
     writeSave(next);
     setSave(next);
     setCurrent("");
+    if (won) submitScore("word500", "wins", 1);
   }
 
   function toggleMark(rowIndex: number, letterIndex: number) {
@@ -165,8 +167,8 @@ export default function Word500Board() {
       <div className={styles.hint}>
         5-letter word, {MAX_GUESSES - save.guesses.length} guesses left. Each guess shows
         only how many letters are green/yellow/gray — not which ones. Click a tile to cycle
-        your own mark (gray → yellow → green → red for "definitely wrong"). Letters below
-        show which ones you've already used.
+        your own mark (gray → yellow → green → red for &quot;definitely wrong&quot;). Letters
+        below show which ones you&apos;ve already used.
       </div>
 
       {save.status === "won" && (

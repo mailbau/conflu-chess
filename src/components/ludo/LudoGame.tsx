@@ -6,6 +6,7 @@ import { getPlayerId } from "@/lib/playerId";
 import type { LudoGameRow } from "@/lib/ludo/gameRow";
 import { TURN_TIMEOUT_MS } from "@/lib/ludo/types";
 import { playMoveSound, playCaptureSound, playGameOverSound } from "@/lib/sound";
+import { submitScore } from "@/lib/submitScore";
 import LudoBoard from "./LudoBoard";
 import styles from "./LudoGame.module.css";
 
@@ -47,8 +48,12 @@ export default function LudoGame({ gameId }: { gameId: string }) {
         (payload) => {
           const row = payload.new as LudoGameRow;
           const newLines = row.state.log.slice(prevLogLen.current);
-          if (newLines.some((l) => l.includes("wins!"))) playGameOverSound();
-          else if (newLines.some((l) => l.includes("sent") && l.includes("home"))) playCaptureSound();
+          if (newLines.some((l) => l.includes("wins!"))) {
+            playGameOverSound();
+            if (row.state.phase.kind === "finished" && row.state.phase.winner === playerId.current) {
+              submitScore("ludo", "wins", 1);
+            }
+          } else if (newLines.some((l) => l.includes("sent") && l.includes("home"))) playCaptureSound();
           else if (newLines.length > 0) playMoveSound();
           prevLogLen.current = row.state.log.length;
           timeoutClaimed.current = false;

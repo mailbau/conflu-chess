@@ -9,6 +9,7 @@ import { getPlayerId } from "@/lib/playerId";
 import type { GameRow } from "@/lib/gameTypes";
 import { playMoveSound, playCaptureSound, playGameOverSound } from "@/lib/sound";
 import { premoveTargets, applyForcedMove } from "@/lib/chessPremove";
+import { submitScore } from "@/lib/submitScore";
 import styles from "./ChessGame.module.css";
 
 type Premove = { from: string; to: string; promotion: string };
@@ -79,6 +80,10 @@ export default function ChessGame({ gameId }: { gameId: string }) {
           }
           if (prevStatus.current !== null && row.status === "finished" && prevStatus.current !== "finished") {
             playGameOverSound();
+            const myColor =
+              row.white_player === playerId.current ? "w" : row.black_player === playerId.current ? "b" : null;
+            const iWon = (myColor === "w" && row.result === "1-0") || (myColor === "b" && row.result === "0-1");
+            if (iWon) submitScore("chess", "wins", 1);
           }
           prevPgn.current = row.pgn;
           prevStatus.current = row.status;

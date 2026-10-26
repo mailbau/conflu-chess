@@ -9,6 +9,7 @@ import {
   todayDateKey,
 } from "@/lib/wordle";
 import { loadSave, writeSave, type LetterStatus, type WordleSave } from "@/lib/wordleStorage";
+import { submitScore } from "@/lib/submitScore";
 import styles from "./WordleBoard.module.css";
 
 const MAX_GUESSES = 6;
@@ -95,6 +96,7 @@ export default function WordleBoard() {
     writeSave(next);
     setSave(next);
     setCurrent("");
+    if (won) submitScore("wordle", "wins", 1);
   }
 
   function pressKey(k: string) {

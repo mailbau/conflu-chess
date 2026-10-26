@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   DIFFICULTY_CONFIG,
   emptyBoard,
@@ -13,6 +13,7 @@ import {
   type Cell,
 } from "@/lib/minesweeper";
 import { loadSave, writeSave, clearSave, type MinesweeperSave } from "@/lib/minesweeperStorage";
+import { submitScore } from "@/lib/submitScore";
 import styles from "./MinesweeperBoard.module.css";
 
 const DIFFICULTIES: Difficulty[] = ["beginner", "intermediate", "expert"];
@@ -36,10 +37,18 @@ function formatTime(total: number) {
 
 export default function MinesweeperBoard() {
   const [save, setSave] = useState<MinesweeperSave | null>(null);
+  const prevStatus = useRef<string | null>(null);
 
   useEffect(() => {
     setSave(loadSave() ?? newGame("beginner"));
   }, []);
+
+  useEffect(() => {
+    if (save?.status === "won" && prevStatus.current !== "won") {
+      submitScore("minesweeper", `best_time_${save.difficulty}`, save.seconds * 1000);
+    }
+    prevStatus.current = save?.status ?? null;
+  }, [save?.status]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (save) writeSave(save);
