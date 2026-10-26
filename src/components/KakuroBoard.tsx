@@ -24,6 +24,18 @@ async function newGame(size: Size, difficulty: string): Promise<KakuroSave> {
   };
 }
 
+// guards against a stale save from an older version of this page (e.g.
+// missing `difficulty`/`puzzleId`, or a `size` no longer offered) crashing
+// the board instead of just being discarded
+function isValidSave(save: KakuroSave | null): save is KakuroSave {
+  if (!save) return false;
+  if (!(SIZES as readonly number[]).includes(save.size)) return false;
+  const difficulties = DIFFICULTIES_FOR_SIZE[save.size as Size];
+  if (!difficulties || !difficulties.includes(save.difficulty)) return false;
+  if (!Array.isArray(save.cells) || !Array.isArray(save.board) || !Array.isArray(save.runs)) return false;
+  return true;
+}
+
 function formatTime(total: number) {
   const m = Math.floor(total / 60);
   const s = total % 60;
@@ -40,7 +52,7 @@ export default function KakuroBoard() {
 
   useEffect(() => {
     const existing = loadSave();
-    if (existing) {
+    if (isValidSave(existing)) {
       setSave(existing);
       return;
     }
