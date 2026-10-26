@@ -12,6 +12,7 @@ export const WORDLE_TITLE = "BRD 2026 050 OPS COG Verifikasi Kode Referensi Hari
 export const POLYGONLE_TITLE = "BRD 2026 044 OPS COG Validasi Pola Simbol Transaksi";
 export const WORD500_TITLE = "BRD 2026 045 OPS COG Audit Tersembunyi Kode Transaksi";
 export const MINESWEEPER_TITLE = "BRD 2026 046 OPS COG Deteksi Dini Anomali Grid Transaksi";
+export const TYPINGTEST_TITLE = "BRD 2026 047 OPS COG Pengukuran Kecepatan Input Operator";
 
 const REAL_LINKS = [
   { href: "/", label: "2026 - Central Operation Group (COG)" },
@@ -21,10 +22,10 @@ const REAL_LINKS = [
   { href: "/polygonle", label: POLYGONLE_TITLE },
   { href: "/word500", label: WORD500_TITLE },
   { href: "/minesweeper", label: MINESWEEPER_TITLE },
+  { href: "/typingtest", label: TYPINGTEST_TITLE },
 ];
 
 const DECORATIVE_TITLES = [
-  "BRD 2026 047 OPS COG Enhancement Dashboard Cardpro",
   "BRD 2026 048 OPS COG Enhancement SOR Kliring Kredit Incoming",
   "BRD 2026 049 OPS COG Enhancement Berita Acara Card Destruction",
   "BRD 2026 053 OPS COG RPA Auto Proceed Guarantee",

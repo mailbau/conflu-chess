@@ -5,6 +5,7 @@ import ConfluenceShell, {
   POLYGONLE_TITLE,
   WORD500_TITLE,
   MINESWEEPER_TITLE,
+  TYPINGTEST_TITLE,
 } from "@/components/ConfluenceShell";
 import styles from "@/components/ConfluenceShell.module.css";
 
@@ -63,6 +64,12 @@ export default function Home() {
             <td>6</td>
             <td>
               <a href="/minesweeper">{MINESWEEPER_TITLE}</a>
+            </td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>
+              <a href="/typingtest">{TYPINGTEST_TITLE}</a>
             </td>
           </tr>
         </tbody>
