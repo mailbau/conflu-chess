@@ -115,6 +115,14 @@ export default function Word500Board() {
     setSave(next);
   }
 
+  function resetMarks() {
+    if (!save) return;
+    const annotations = save.annotations.map((row) => row.map(() => "absent" as Mark));
+    const next = { ...save, annotations };
+    writeSave(next);
+    setSave(next);
+  }
+
   function startNewFree() {
     const next = newFree();
     writeSave(next);
@@ -195,6 +203,12 @@ export default function Word500Board() {
           </div>
         ))}
       </div>
+
+      {save.guesses.length > 0 && (
+        <button className={styles.resetMarksButton} onClick={resetMarks}>
+          Reset colors
+        </button>
+      )}
 
       <div className={styles.keyboard}>
         {alphabet.map((letter) => (

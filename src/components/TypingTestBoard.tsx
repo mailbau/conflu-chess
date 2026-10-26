@@ -20,35 +20,47 @@ export default function TypingTestBoard() {
   );
   const inputRef = useRef<HTMLInputElement>(null);
   const startRef = useRef<number | null>(null);
-  const typedChars = useRef({ correct: 0, total: 0 });
+  // the running interval reads these every tick instead of closing over
+  // `typed`/`words`/`duration` state, which would otherwise be pinned to
+  // whatever they were the instant the effect last re-ran (the moment typing
+  // started) and never reflect what's actually been typed since
+  const typedRef = useRef("");
+  const wordsRef = useRef<string[]>([]);
+  const durationRef = useRef(duration);
 
   useEffect(() => {
-    setWords(randomWords(WORD_POOL));
+    const w = randomWords(WORD_POOL);
+    wordsRef.current = w;
+    setWords(w);
   }, []);
 
   function reset(nextDuration = duration) {
-    setWords(randomWords(WORD_POOL));
+    const w = randomWords(WORD_POOL);
+    wordsRef.current = w;
+    setWords(w);
+    typedRef.current = "";
     setTyped("");
     setPhase("idle");
     setTimeLeft(nextDuration);
     setResult(null);
     startRef.current = null;
-    typedChars.current = { correct: 0, total: 0 };
+    durationRef.current = nextDuration;
     inputRef.current?.focus();
   }
 
   function finish() {
-    const typedWords = typed.trim().split(/\s+/).filter(Boolean);
+    const typedWords = typedRef.current.trim().split(/\s+/).filter(Boolean);
+    const target = wordsRef.current;
     let correctChars = 0;
     let totalChars = 0;
     typedWords.forEach((w, i) => {
-      const target = words[i] ?? "";
+      const t = target[i] ?? "";
       totalChars += w.length + 1; // +1 for the space after it
       for (let c = 0; c < w.length; c++) {
-        if (w[c] === target[c]) correctChars++;
+        if (w[c] === t[c]) correctChars++;
       }
     });
-    const minutes = duration / 60;
+    const minutes = durationRef.current / 60;
     const wpm = Math.round(correctChars / 5 / minutes);
     const raw = Math.round(totalChars / 5 / minutes);
     const accuracy = totalChars > 0 ? Math.round((correctChars / totalChars) * 100) : 100;
@@ -61,7 +73,7 @@ export default function TypingTestBoard() {
     const id = setInterval(() => {
       if (startRef.current === null) return;
       const elapsed = (Date.now() - startRef.current) / 1000;
-      const left = Math.max(0, duration - elapsed);
+      const left = Math.max(0, durationRef.current - elapsed);
       setTimeLeft(Math.ceil(left));
       if (left <= 0) {
         clearInterval(id);
@@ -69,7 +81,7 @@ export default function TypingTestBoard() {
       }
     }, 200);
     return () => clearInterval(id);
-  }, [phase, duration]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [phase]); // eslint-disable-line react-hooks/exhaustive-deps
 
   function handleChange(value: string) {
     if (phase === "done") return;
@@ -77,6 +89,7 @@ export default function TypingTestBoard() {
       startRef.current = Date.now();
       setPhase("running");
     }
+    typedRef.current = value;
     setTyped(value);
   }
 

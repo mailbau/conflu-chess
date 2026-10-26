@@ -206,3 +206,18 @@
 .newGameButton:hover {
   opacity: 0.9;
 }
+
+.resetMarksButton {
+  padding: 6px 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-dim);
+  font-size: 13px;
+  cursor: pointer;
+  align-self: flex-start;
+}
+
+.resetMarksButton:hover {
+  opacity: 0.9;
+}
