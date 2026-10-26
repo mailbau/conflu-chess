@@ -13,9 +13,11 @@ export default function LudoGame({ gameId }: { gameId: string }) {
   const [game, setGame] = useState<LudoGameRow | null>(null);
   const [name, setName] = useState("");
   const [tick, setTick] = useState(0);
+  const [rollingFace, setRollingFace] = useState<number | null>(null);
   const playerId = useRef<string>("");
   const prevLogLen = useRef<number>(0);
   const timeoutClaimed = useRef(false);
+  const rollAnimRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     playerId.current = getPlayerId();
@@ -90,6 +92,26 @@ export default function LudoGame({ gameId }: { gameId: string }) {
       body: JSON.stringify({ playerId: playerId.current, action }),
     });
   }
+
+  function rollDice() {
+    if (rollAnimRef.current) return; // already rolling
+    setRollingFace(Math.ceil(Math.random() * 6));
+    rollAnimRef.current = setInterval(() => {
+      setRollingFace(Math.ceil(Math.random() * 6));
+    }, 80);
+    sendAction({ type: "roll" });
+    setTimeout(() => {
+      if (rollAnimRef.current) clearInterval(rollAnimRef.current);
+      rollAnimRef.current = null;
+      setRollingFace(null);
+    }, 600);
+  }
+
+  useEffect(() => {
+    return () => {
+      if (rollAnimRef.current) clearInterval(rollAnimRef.current);
+    };
+  }, []);
 
   async function join() {
     if (!name.trim()) return;
@@ -193,14 +215,22 @@ export default function LudoGame({ gameId }: { gameId: string }) {
             <div className={styles.turnInfo}>
               <span className={styles.colorDot} style={{ background: dotColor(currentPlayer.color) }} />
               {isMyTurn ? "Your turn" : `${currentPlayer.name}'s turn`}
-              {state.lastRoll && <span className={styles.diceFace}> 🎲 {state.lastRoll}</span>}
+              {rollingFace !== null ? (
+                <span className={`${styles.diceFace} ${styles.diceRolling}`}> 🎲 {rollingFace}</span>
+              ) : (
+                state.lastRoll && <span className={styles.diceFace}> 🎲 {state.lastRoll}</span>
+              )}
             </div>
             <div className={styles.timerTrack} key={tick}>
               <div className={styles.timerFill} style={{ width: `${timerPct}%` }} />
             </div>
             {isMyTurn && state.phase.kind === "roll" && (
-              <button className={styles.actionButton} onClick={() => sendAction({ type: "roll" })}>
-                Roll dice
+              <button
+                className={styles.actionButton}
+                onClick={rollDice}
+                disabled={rollingFace !== null}
+              >
+                {rollingFace !== null ? "Rolling…" : "Roll dice"}
               </button>
             )}
             {isMyTurn && state.phase.kind === "move" && (
