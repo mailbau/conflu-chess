@@ -15,6 +15,7 @@ export const WORD500_TITLE = "BRD 2026 045 OPS COG Audit Tersembunyi Kode Transa
 export const MINESWEEPER_TITLE = "BRD 2026 046 OPS COG Deteksi Dini Anomali Grid Transaksi";
 export const TYPINGTEST_TITLE = "BRD 2026 047 OPS COG Pengukuran Kecepatan Input Operator";
 export const LUDO_TITLE = "BRD 2024 MCR OPS 058 Simulasi Rute Distribusi Kas Antar Cabang";
+export const KAKURO_TITLE = "BRD 2026 061 OPS COG Rekonsiliasi Silang Jumlah Nominal Cabang";
 
 const REAL_LINKS = [
   { href: "/", label: "2026 - Central Operation Group (COG)" },
@@ -26,6 +27,7 @@ const REAL_LINKS = [
   { href: "/minesweeper", label: MINESWEEPER_TITLE },
   { href: "/typingtest", label: TYPINGTEST_TITLE },
   { href: "/ludo", label: LUDO_TITLE },
+  { href: "/kakuro", label: KAKURO_TITLE },
 ];
 
 const DECORATIVE_TITLES = [

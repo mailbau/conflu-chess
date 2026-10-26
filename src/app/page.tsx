@@ -7,6 +7,7 @@ import ConfluenceShell, {
   MINESWEEPER_TITLE,
   TYPINGTEST_TITLE,
   LUDO_TITLE,
+  KAKURO_TITLE,
 } from "@/components/ConfluenceShell";
 import styles from "@/components/ConfluenceShell.module.css";
 
@@ -87,6 +88,13 @@ export default function Home() {
               <a href="/ludo">{LUDO_TITLE}</a>
             </td>
             <td className={styles.gameNote}>Ludo</td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td>
+              <a href="/kakuro">{KAKURO_TITLE}</a>
+            </td>
+            <td className={styles.gameNote}>Kakuro</td>
           </tr>
         </tbody>
       </table>

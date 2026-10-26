@@ -1,0 +1,140 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 480px;
+}
+
+.difficultyPicker {
+  display: flex;
+  gap: 8px;
+}
+
+.difficultyPicker button {
+  padding: 6px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text);
+  cursor: pointer;
+  text-transform: capitalize;
+  font-size: 13px;
+}
+
+.difficultyActive {
+  background: var(--blue-bg) !important;
+  color: var(--blue) !important;
+  border-color: var(--blue) !important;
+}
+
+.statusBar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+}
+
+.checkButton,
+.resetButton {
+  padding: 6px 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.checkButton:hover,
+.resetButton:hover {
+  border-color: var(--blue);
+}
+
+.solvedBanner {
+  padding: 10px 16px;
+  background: #14301f;
+  border: 1px solid #2a6b42;
+  color: #7ee2a0;
+  border-radius: 4px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.boardScroll {
+  overflow-x: auto;
+}
+
+.grid {
+  display: grid;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  width: fit-content;
+}
+
+.blackCell {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  background: var(--bg-sidebar);
+}
+
+.clueRight {
+  position: absolute;
+  top: 1px;
+  right: 3px;
+  font-size: 10px;
+  color: var(--text-dim);
+}
+
+.clueDown {
+  position: absolute;
+  bottom: 1px;
+  left: 3px;
+  font-size: 10px;
+  color: var(--text-dim);
+}
+
+.whiteCell {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-card);
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+}
+
+.selected {
+  background: var(--blue-bg);
+  box-shadow: inset 0 0 0 2px var(--blue);
+}
+
+.wrong {
+  color: #f87171;
+}
+
+.numpad {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  max-width: 320px;
+}
+
+.numpad button {
+  padding: 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.numpad button:hover {
+  border-color: var(--blue);
+}

@@ -42,6 +42,11 @@ export const SCORE_REGISTRY: Record<string, Record<string, MetricDef>> = {
     best_time_hard: bestTime("Best time (hard)"),
     best_time_expert: bestTime("Best time (expert)"),
   },
+  kakuro: {
+    best_time_easy: bestTime("Best time (easy)"),
+    best_time_medium: bestTime("Best time (medium)"),
+    best_time_hard: bestTime("Best time (hard)"),
+  },
   minesweeper: {
     best_time_beginner: bestTime("Best time (beginner)"),
     best_time_intermediate: bestTime("Best time (intermediate)"),

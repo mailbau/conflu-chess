@@ -14,6 +14,7 @@ const GAME_LABELS: Record<string, string> = {
   sudoku: "Sudoku",
   minesweeper: "Minesweeper",
   typingtest: "Typing test",
+  kakuro: "Kakuro",
 };
 
 const GAMES = Object.keys(SCORE_REGISTRY);
