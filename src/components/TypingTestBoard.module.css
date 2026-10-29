@@ -50,6 +50,12 @@
   border-radius: 4px;
   cursor: text;
   user-select: none;
+  height: calc(3 * 2 * 20px);
+  overflow: hidden;
+}
+
+.textLines {
+  transition: transform 0.25s ease;
 }
 
 .word {

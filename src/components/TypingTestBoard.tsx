@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { randomWords } from "@/lib/typingWords";
 import { submitScore } from "@/lib/submitScore";
 import styles from "./TypingTestBoard.module.css";
@@ -21,6 +21,10 @@ export default function TypingTestBoard() {
   );
   const inputRef = useRef<HTMLInputElement>(null);
   const startRef = useRef<number | null>(null);
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const lineRef = useRef<HTMLDivElement>(null);
+  const wordRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const [scrollY, setScrollY] = useState(0);
   // the running interval reads these every tick instead of closing over
   // `typed`/`words`/`duration` state, which would otherwise be pinned to
   // whatever they were the instant the effect last re-ran (the moment typing
@@ -32,6 +36,7 @@ export default function TypingTestBoard() {
   useEffect(() => {
     const w = randomWords(WORD_POOL);
     wordsRef.current = w;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- initial word list on mount
     setWords(w);
   }, []);
 
@@ -44,6 +49,7 @@ export default function TypingTestBoard() {
     setPhase("idle");
     setTimeLeft(nextDuration);
     setResult(null);
+    setScrollY(0);
     startRef.current = null;
     durationRef.current = nextDuration;
     inputRef.current?.focus();
@@ -110,7 +116,19 @@ export default function TypingTestBoard() {
   const typedWords = typed.split(" ");
   const currentWordIndex = typedWords.length - 1;
   const currentInput = typedWords[currentWordIndex] ?? "";
-  const windowStart = Math.max(0, Math.floor(currentWordIndex / 20) * 20);
+
+  // scroll just enough to keep the current word's line one line down from the
+  // top, instead of snapping a whole page at once -- the CSS transition on
+  // the translateY below is what makes the move itself smooth
+  useLayoutEffect(() => {
+    const viewport = viewportRef.current;
+    const word = wordRefs.current[currentWordIndex];
+    if (!viewport || !word) return;
+    const lineHeight = parseFloat(getComputedStyle(viewport).lineHeight);
+    const relativeTop = word.getBoundingClientRect().top - viewport.getBoundingClientRect().top + scrollY;
+    const next = Math.max(0, relativeTop - lineHeight);
+    setScrollY((prev) => (Math.abs(prev - next) > 1 ? next : prev));
+  }, [currentWordIndex, words]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (words.length === 0) return <p>Loading…</p>;
 
@@ -132,36 +150,47 @@ export default function TypingTestBoard() {
       </div>
 
       {phase !== "done" && (
-        <div className={styles.textArea} onClick={() => inputRef.current?.focus()}>
-          {words.slice(windowStart, windowStart + 60).map((word, wiRel) => {
-            const wi = wiRel + windowStart;
-            return (
-            <span key={wi} className={styles.word}>
-              {word.split("").map((ch, ci) => {
-                let cls = styles.charPending;
-                if (wi < currentWordIndex) {
-                  cls = typedWords[wi]?.[ci] === ch ? styles.charCorrect : styles.charWrong;
-                } else if (wi === currentWordIndex) {
-                  if (ci < currentInput.length) {
-                    cls = currentInput[ci] === ch ? styles.charCorrect : styles.charWrong;
-                  } else if (ci === currentInput.length) {
-                    cls = styles.charCursor;
+        <div
+          ref={viewportRef}
+          className={styles.textArea}
+          onClick={() => inputRef.current?.focus()}
+        >
+          <div
+            ref={lineRef}
+            className={styles.textLines}
+            style={{ transform: `translateY(-${scrollY}px)` }}
+          >
+            {words.map((word, wi) => (
+              <span
+                key={wi}
+                ref={(el) => {
+                  wordRefs.current[wi] = el;
+                }}
+                className={styles.word}
+              >
+                {word.split("").map((ch, ci) => {
+                  let cls = styles.charPending;
+                  if (wi < currentWordIndex) {
+                    cls = typedWords[wi]?.[ci] === ch ? styles.charCorrect : styles.charWrong;
+                  } else if (wi === currentWordIndex) {
+                    if (ci < currentInput.length) {
+                      cls = currentInput[ci] === ch ? styles.charCorrect : styles.charWrong;
+                    } else if (ci === currentInput.length) {
+                      cls = styles.charCursor;
+                    }
                   }
-                }
-                return (
-                  <span key={ci} className={cls}>
-                    {ch}
-                  </span>
-                );
-              })}
-              {wi === currentWordIndex && currentInput.length > word.length && (
-                <span className={styles.charExtra}>
-                  {currentInput.slice(word.length)}
-                </span>
-              )}
-            </span>
-            );
-          })}
+                  return (
+                    <span key={ci} className={cls}>
+                      {ch}
+                    </span>
+                  );
+                })}
+                {wi === currentWordIndex && currentInput.length > word.length && (
+                  <span className={styles.charExtra}>{currentInput.slice(word.length)}</span>
+                )}
+              </span>
+            ))}
+          </div>
         </div>
       )}
 
