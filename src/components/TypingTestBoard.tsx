@@ -93,6 +93,13 @@ export default function TypingTestBoard() {
     }
     typedRef.current = value;
     setTyped(value);
+
+    const wordIndex = value.split(" ").length - 1;
+    if (wordsRef.current.length - wordIndex < 20) {
+      const extended = [...wordsRef.current, ...randomWords(WORD_POOL)];
+      wordsRef.current = extended;
+      setWords(extended);
+    }
   }
 
   function switchDuration(d: number) {
@@ -103,6 +110,7 @@ export default function TypingTestBoard() {
   const typedWords = typed.split(" ");
   const currentWordIndex = typedWords.length - 1;
   const currentInput = typedWords[currentWordIndex] ?? "";
+  const windowStart = Math.max(0, Math.floor(currentWordIndex / 20) * 20);
 
   if (words.length === 0) return <p>Loading…</p>;
 
@@ -125,7 +133,9 @@ export default function TypingTestBoard() {
 
       {phase !== "done" && (
         <div className={styles.textArea} onClick={() => inputRef.current?.focus()}>
-          {words.slice(0, 60).map((word, wi) => (
+          {words.slice(windowStart, windowStart + 60).map((word, wiRel) => {
+            const wi = wiRel + windowStart;
+            return (
             <span key={wi} className={styles.word}>
               {word.split("").map((ch, ci) => {
                 let cls = styles.charPending;
@@ -150,7 +160,8 @@ export default function TypingTestBoard() {
                 </span>
               )}
             </span>
-          ))}
+            );
+          })}
         </div>
       )}
 
