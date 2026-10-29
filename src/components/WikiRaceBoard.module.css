@@ -5,6 +5,27 @@
   max-width: 800px;
 }
 
+.modeTabs {
+  display: flex;
+  gap: 8px;
+}
+
+.modeTabs button {
+  padding: 6px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.modeTabActive {
+  background: var(--blue-bg) !important;
+  color: var(--blue) !important;
+  border-color: var(--blue) !important;
+}
+
 .header {
   display: flex;
   align-items: center;

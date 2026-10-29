@@ -2,9 +2,9 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { submitScore } from "@/lib/submitScore";
+import { dailyPair, todayDateKey } from "@/lib/wikiracer";
+import { loadSave, writeSave, type WikiRaceSave } from "@/lib/wikiracerStorage";
 import styles from "./WikiRaceBoard.module.css";
-
-type Phase = "loading-setup" | "running" | "done";
 
 const API = "https://en.wikipedia.org/api/rest_v1/page";
 
@@ -40,101 +40,154 @@ function sanitize(html: string): string {
   return doc.body.innerHTML;
 }
 
+function newDaily(): WikiRaceSave {
+  const dateKey = todayDateKey();
+  const [start, target] = dailyPair(dateKey);
+  return { mode: "daily", dateKey, target, path: [start], startedAt: Date.now(), status: "playing" };
+}
+
+async function newFree(): Promise<WikiRaceSave> {
+  const [start, target] = await Promise.all([randomTitle(), randomTitle()]);
+  return {
+    mode: "free",
+    dateKey: crypto.randomUUID(),
+    target,
+    path: [start],
+    startedAt: Date.now(),
+    status: "playing",
+  };
+}
+
 export default function WikiRaceBoard() {
-  const [phase, setPhase] = useState<Phase>("loading-setup");
-  const [target, setTarget] = useState("");
-  const [currentTitle, setCurrentTitle] = useState("");
+  const [mode, setMode] = useState<"daily" | "free">("daily");
+  const [save, setSave] = useState<WikiRaceSave | null>(null);
   const [html, setHtml] = useState("");
-  const [path, setPath] = useState<string[]>([]);
   const [elapsed, setElapsed] = useState(0);
   const [error, setError] = useState(false);
-  const startRef = useRef<number | null>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
+  const currentTitleRef = useRef("");
 
   const loadArticle = useCallback(async (title: string) => {
     try {
       const raw = await fetchArticleHtml(title);
       setHtml(sanitize(raw));
-      setCurrentTitle(title);
+      currentTitleRef.current = title;
       setError(false);
     } catch {
       setError(true);
     }
   }, []);
 
-  const setup = useCallback(async () => {
-    setPhase("loading-setup");
-    const [start, dest] = await Promise.all([randomTitle(), randomTitle()]);
-    setTarget(dest);
-    setPath([start]);
-    startRef.current = Date.now();
-    setElapsed(0);
-    await loadArticle(start);
-    setPhase("running");
-  }, [loadArticle]);
+  // load (or start) today's daily puzzle, and separately the free-play state
+  useEffect(() => {
+    async function init() {
+      const d = loadSave("daily");
+      const todaysDaily = d && d.dateKey === todayDateKey() ? d : newDaily();
+      writeSave(todaysDaily);
+      const f = loadSave("free") ?? (await newFree());
+      const active = mode === "daily" ? todaysDaily : f;
+      setSave(active);
+      await loadArticle(active.path[active.path.length - 1]);
+    }
+    init();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- initial fetch on mount
-    setup();
-  }, [setup]);
-
-  useEffect(() => {
-    if (phase !== "running") return;
-    const id = setInterval(() => {
-      if (startRef.current) setElapsed(Math.floor((Date.now() - startRef.current) / 1000));
-    }, 500);
+    if (!save || save.status !== "playing") return;
+    const id = setInterval(() => setElapsed(Math.floor((Date.now() - save.startedAt) / 1000)), 500);
     return () => clearInterval(id);
-  }, [phase]);
+  }, [save]);
+
+  async function switchMode(next: "daily" | "free") {
+    setMode(next);
+    let active: WikiRaceSave;
+    if (next === "daily") {
+      const d = loadSave("daily");
+      active = d && d.dateKey === todayDateKey() ? d : newDaily();
+    } else {
+      active = loadSave("free") ?? (await newFree());
+    }
+    writeSave(active);
+    setSave(active);
+    await loadArticle(active.path[active.path.length - 1]);
+  }
+
+  async function startNewFree() {
+    const next = await newFree();
+    writeSave(next);
+    setSave(next);
+    await loadArticle(next.path[0]);
+  }
 
   function handleClick(e: React.MouseEvent) {
     const a = (e.target as HTMLElement).closest("a[data-wiki-title]");
-    if (!a) return;
+    if (!a || !save || save.status !== "playing") return;
     e.preventDefault();
     const title = a.getAttribute("data-wiki-title")!;
-    const nextPath = [...path, title];
-    setPath(nextPath);
-    loadArticle(title).then(() => {
-      if (title.toLowerCase() === target.toLowerCase()) {
-        setPhase("done");
-        submitScore("wikiracer", "fewest_clicks", nextPath.length - 1);
-        submitScore("wikiracer", "best_time", Date.now() - (startRef.current ?? Date.now()));
-      }
-    });
+    const path = [...save.path, title];
+    const won = title.toLowerCase() === save.target.toLowerCase();
+    const next: WikiRaceSave = won
+      ? { ...save, path, status: "won", finishedMs: Date.now() - save.startedAt }
+      : { ...save, path };
+    writeSave(next);
+    setSave(next);
+    loadArticle(title);
+    if (won) {
+      submitScore("wikiracer", "fewest_clicks", path.length - 1);
+      submitScore("wikiracer", "best_time", next.finishedMs!);
+    }
   }
 
-  if (phase === "loading-setup" && !target) return <p>Loading…</p>;
+  if (!save) return <p>Loading…</p>;
+
+  const clicks = save.path.length - 1;
+  const secondsShown = save.status === "won" ? Math.floor((save.finishedMs ?? 0) / 1000) : elapsed;
 
   return (
     <div className={styles.wrap}>
-      <div className={styles.header}>
-        <div>
-          Get from <strong>{path[0]}</strong> to <strong>{target}</strong>
-        </div>
-        <div className={styles.stats}>
-          <span>{elapsed}s</span>
-          <span>{path.length - 1} clicks</span>
-        </div>
-        <button className={styles.newGameButton} onClick={setup}>
-          New race
+      <div className={styles.modeTabs}>
+        <button className={mode === "daily" ? styles.modeTabActive : ""} onClick={() => switchMode("daily")}>
+          Daily
+        </button>
+        <button className={mode === "free" ? styles.modeTabActive : ""} onClick={() => switchMode("free")}>
+          Free play
         </button>
       </div>
 
-      {phase === "done" && (
-        <div className={styles.doneBanner}>
-          Reached <strong>{target}</strong> in {path.length - 1} clicks and {elapsed}s.{" "}
-          <button className={styles.newGameButton} onClick={setup}>
-            Play again
+      <div className={styles.header}>
+        <div>
+          Get from <strong>{save.path[0]}</strong> to <strong>{save.target}</strong>
+        </div>
+        <div className={styles.stats}>
+          <span>{secondsShown}s</span>
+          <span>{clicks} clicks</span>
+        </div>
+        {mode === "free" && (
+          <button className={styles.newGameButton} onClick={startNewFree}>
+            New race
           </button>
+        )}
+      </div>
+
+      {save.status === "won" && (
+        <div className={styles.doneBanner}>
+          Reached <strong>{save.target}</strong> in {clicks} clicks and {secondsShown}s.
+          {mode === "daily" ? " Come back tomorrow for a new one." : (
+            <button className={styles.newGameButton} onClick={startNewFree}>
+              Play again
+            </button>
+          )}
         </div>
       )}
 
-      <div className={styles.path}>{path.join(" → ")}</div>
+      <div className={styles.path}>{save.path.join(" → ")}</div>
 
       {error ? (
-        <p>Could not load article. <button onClick={() => loadArticle(currentTitle)}>Retry</button></p>
+        <p>
+          Could not load article.{" "}
+          <button onClick={() => loadArticle(currentTitleRef.current)}>Retry</button>
+        </p>
       ) : (
         <div
-          ref={contentRef}
           className={styles.article}
           onClick={handleClick}
           dangerouslySetInnerHTML={{ __html: html }}

@@ -15,6 +15,7 @@ const GAME_LABELS: Record<string, string> = {
   minesweeper: "Minesweeper",
   typingtest: "Typing test",
   kakuro: "Kakuro",
+  wikiracer: "Wiki race",
 };
 
 const GAMES = Object.keys(SCORE_REGISTRY);
