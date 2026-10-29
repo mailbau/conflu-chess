@@ -55,6 +55,14 @@ export const SCORE_REGISTRY: Record<string, Record<string, MetricDef>> = {
     best_wpm_30: bestWpm("Best WPM (30s)"),
     best_wpm_60: bestWpm("Best WPM (60s)"),
   },
+  wikiracer: {
+    fewest_clicks: {
+      label: "Fewest clicks",
+      mode: "best-low",
+      format: (v) => String(v),
+    },
+    best_time: bestTime("Best time"),
+  },
 };
 
 export function metricDef(game: string, metric: string): MetricDef | null {

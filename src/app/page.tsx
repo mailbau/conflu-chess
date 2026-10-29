@@ -10,6 +10,7 @@ import {
   TYPINGTEST_TITLE,
   LUDO_TITLE,
   KAKURO_TITLE,
+  WIKIRACER_TITLE,
 } from "@/components/ConfluenceShell";
 import ThemedShell from "@/components/ThemedShell";
 import { useTheme } from "@/lib/theme";
@@ -26,6 +27,7 @@ const ENTRIES = [
   { href: "/typingtest", title: TYPINGTEST_TITLE, game: "Typing test" },
   { href: "/ludo", title: LUDO_TITLE, game: "Ludo" },
   { href: "/kakuro", title: KAKURO_TITLE, game: "Kakuro" },
+  { href: "/wikiracer", title: WIKIRACER_TITLE, game: "Wiki race" },
 ];
 
 export default function Home() {
